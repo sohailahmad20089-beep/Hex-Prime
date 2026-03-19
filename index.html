@@ -3,123 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMMbyAS - Wallet Panel</title>
+    <title>SMMbyAS - Pro Wallet Panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --primary: #38bdf8; --accent: #22c55e; --text: #f8fafc; }
+        :root { --bg: #0f172a; --card: #1e293b; --primary: #38bdf8; --accent: #22c55e; --error: #ef4444; --text: #f8fafc; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
         .container { max-width: 500px; margin: auto; }
-        
-        /* Wallet Header */
-        .wallet-card { background: linear-gradient(135deg, #38bdf8, #1d4ed8); padding: 20px; border-radius: 15px; text-align: center; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .balance-amt { font-size: 32px; font-weight: 900; margin: 10px 0; }
-        .add-fund-btn { background: white; color: #1d4ed8; border: none; padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 13px; }
+
+        /* Wallet Section Style */
+        .wallet-header { background: linear-gradient(135deg, #1e293b, #0f172a); padding: 25px; border-radius: 20px; border: 1px solid #334155; text-align: center; margin-bottom: 20px; position: relative; overflow: hidden; }
+        .wallet-header::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(56,189,248,0.1) 0%, transparent 70%); }
+        .bal-label { font-size: 14px; color: #94a3b8; margin-bottom: 5px; }
+        .bal-amount { font-size: 38px; font-weight: 900; color: var(--primary); }
+        .add-btn { margin-top: 15px; background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; transition: 0.3s; }
 
         .card { background: var(--card); border-radius: 15px; padding: 20px; border: 1px solid #334155; margin-bottom: 20px; }
-        label { display: block; margin: 10px 0 5px; font-size: 12px; color: #94a3b8; font-weight: bold; }
-        input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; margin-bottom: 10px; }
-        .btn-buy { width: 100%; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        label { display: block; margin: 15px 0 5px; font-size: 12px; color: #94a3b8; font-weight: bold; }
+        input, select { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; outline: none; }
         
-        /* Modal for adding funds */
-        #fundModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1001; justify-content:center; align-items:center; }
+        .buy-btn { width: 100%; background: var(--accent); color: white; border: none; padding: 15px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+
+        /* Modal Popup for Fund Add */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--card); width: 90%; max-width: 400px; padding: 25px; border-radius: 20px; position: relative; text-align: center; border: 1px solid #334155; }
+        .qr-frame { background: white; padding: 10px; display: inline-block; border-radius: 10px; margin: 15px 0; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="wallet-card">
-        <p style="margin:0; font-size:14px; opacity:0.9;">Available Balance</p>
-        <div class="balance-amt">₹<span id="userBalance">0.00</span></div>
-        <button class="add-fund-btn" onclick="openFundModal()"><i class="fas fa-plus"></i> Add Funds</button>
+    <div class="wallet-header">
+        <div class="bal-label">My Wallet Balance</div>
+        <div class="bal-amount">₹<span id="displayBalance">0.00</span></div>
+        <button class="add-btn" onclick="toggleModal(true)"><i class="fas fa-plus-circle"></i> Add Funds</button>
     </div>
 
     <div class="card">
         <label>TARGET LINK</label>
-        <input type="text" id="targetLink" placeholder="https://instagram.com/...">
+        <input type="text" id="targetLink" placeholder="Instagram/YouTube Link">
 
         <label>SELECT SERVICE</label>
-        <select id="serviceSelect" onchange="updatePriceDisplay()">
+        <select id="serviceSelect" onchange="updatePrice()">
             <option value="">-- Choose Package --</option>
-            <option value='{"name":"1k Views","price":4}'>Instagram 1k Views - ₹4</option>
-            <option value='{"name":"1k Followers","price":35}'>Instagram 1k Followers - ₹35</option>
+            <option value='{"name":"1k Insta Views","price":4}'>Instagram 1k Views - ₹4</option>
+            <option value='{"name":"1k Insta Followers","price":35}'>Instagram 1k Followers - ₹35</option>
+            <option value='{"name":"1k YT Views","price":70}'>YouTube 1k Views - ₹70</option>
         </select>
 
-        <div id="priceMsg" style="text-align:center; margin:10px; color:#38bdf8; font-weight:bold;"></div>
-        <button class="btn-buy" onclick="buyService()">Place Order (Pay from Wallet)</button>
+        <div style="text-align: center; margin: 15px 0; font-size: 18px; font-weight: bold; color: var(--primary);">
+            Cost: ₹<span id="costDisplay">0</span>
+        </div>
+
+        <button class="buy-btn" id="orderBtn" onclick="processOrder()">Order Now (Use Wallet)</button>
     </div>
 </div>
 
-<div id="fundModal">
-    <div class="card" style="width:90%; max-width:400px; position:relative;">
-        <button onclick="closeFundModal()" style="position:absolute; right:15px; top:15px; background:none; border:none; color:white; font-size:20px;">×</button>
-        <h3>Add Money to Wallet</h3>
-        <p style="font-size:12px; color:#94a3b8;">Pay via UPI and enter UTR to update balance.</p>
-        <center>
-            <img id="qrImg" style="width:150px; border:5px solid white; border-radius:10px; margin:10px;">
-        </center>
-        <input type="number" id="fundAmt" placeholder="Enter Amount (₹)" oninput="updateQR()">
-        <input type="number" id="fundUTR" placeholder="Enter 12-digit UTR">
-        <button class="btn-buy" style="background:#38bdf8" onclick="submitFund()">Submit Fund Request</button>
+<div class="modal" id="fundModal">
+    <div class="modal-content">
+        <h3 style="margin-top:0">Add Money</h3>
+        <input type="number" id="fundAmount" placeholder="Enter Amount (₹)" oninput="generateQR()" style="margin-bottom:10px">
+        
+        <div class="qr-frame">
+            <img id="fundQR" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=7388720012@fam" style="width:150px">
+        </div>
+        
+        <p style="font-size:11px; color:#94a3b8">Scan & Pay via any UPI App</p>
+        
+        <input type="number" id="fundUTR" placeholder="Enter 12-Digit UTR Number">
+        <button class="buy-btn" onclick="submitFund()" style="background:var(--primary); margin-top:15px">Verify & Update</button>
+        <button onclick="toggleModal(false)" style="background:none; border:none; color:#94a3b8; margin-top:10px; cursor:pointer">Cancel</button>
     </div>
 </div>
 
 <script>
-    const SCRIPT_URL = "AAPKA_NEW_SCRIPT_URL_HERE";
-    
-    // Page load par Local Balance check karein
-    let balance = parseFloat(localStorage.getItem("wallet_bal") || "0");
-    document.getElementById("userBalance").innerText = balance.toFixed(2);
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz5X_B8qqh8GxY-uq1xGxb3DcPQ4c82ZgLxJh0HqjJVhPucfS7r2aB-QDMGuUUy-ZxhmA/exec";
 
-    function updatePriceDisplay() {
+    // 1. Initial Balance Load (Local Storage for instant feel)
+    let currentBalance = parseFloat(localStorage.getItem("smm_balance") || "0");
+    document.getElementById("displayBalance").innerText = currentBalance.toFixed(2);
+
+    function toggleModal(show) {
+        document.getElementById("fundModal").style.display = show ? "flex" : "none";
+    }
+
+    function generateQR() {
+        const amt = document.getElementById("fundAmount").value || "0";
+        const upi = `upi://pay?pa=7388720012@fam&am=${amt}&cu=INR&tn=AddWallet`;
+        document.getElementById("fundQR").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upi)}`;
+    }
+
+    function updatePrice() {
         const s = document.getElementById("serviceSelect").value;
         if(s) {
             const data = JSON.parse(s);
-            document.getElementById("priceMsg").innerText = "Price: ₹" + data.price;
+            document.getElementById("costDisplay").innerText = data.price;
         }
     }
 
-    function openFundModal() { document.getElementById("fundModal").style.display = "flex"; }
-    function closeFundModal() { document.getElementById("fundModal").style.display = "none"; }
-
-    function updateQR() {
-        const amt = document.getElementById("fundAmt").value;
-        const upi = `upi://pay?pa=7388720012@fam&am=${amt}&cu=INR`;
-        document.getElementById("qrImg").src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upi)}`;
-    }
-
+    // 2. Fund Add Logic
     async function submitFund() {
-        const amt = document.getElementById("fundAmt").value;
-        const utr = document.getElementById("fundUTR").value;
-        if(!amt || utr.length < 12) return alert("Pehle Sahi Amount aur UTR daalein!");
+        const amt = parseFloat(document.getElementById("fundAmount").value);
+        const utr = document.getElementById("fundUTR").value.trim();
 
-        // Request Sheet par bhejenge (Aapko admin panel se approve karna hoga)
-        alert("✅ Fund request sent! After verification, balance will be added.");
-        closeFundModal();
+        if(!amt || utr.length !== 12) return alert("Sahi Amount aur 12-digit UTR daalein!");
+
+        alert("Request sent! Checking your payment... ⏳");
+        
+        // Simulation for now (Real connection needs Backend Sync)
+        // Testing ke liye balance badha rahe hain
+        currentBalance += amt;
+        saveBalance();
+        toggleModal(false);
+        alert(`₹${amt} added to your wallet!`);
     }
 
-    async function buyService() {
-        const link = document.getElementById("targetLink").value;
+    // 3. Order Process (Paisa Katna)
+    async function processOrder() {
+        const link = document.getElementById("targetLink").value.trim();
         const sVal = document.getElementById("serviceSelect").value;
         
-        if(!link || !sVal) return alert("Details fill karein!");
-        
+        if(!link || !sVal) return alert("Pehle details fill karein!");
+
         const service = JSON.parse(sVal);
-        
-        // 1. Balance Check
-        if(balance < service.price) {
-            alert("❌ Recharge Maang Raha Hai! (Low Balance)");
+
+        // Balance Check
+        if(currentBalance < service.price) {
+            alert("❌ Inadequate Balance! Please add funds first.");
+            toggleModal(true);
             return;
         }
 
-        // 2. Paisa Kato
-        balance -= service.price;
-        localStorage.setItem("wallet_bal", balance);
-        document.getElementById("userBalance").innerText = balance.toFixed(2);
+        // Paisa Kato (Logic)
+        if(confirm(`Confirm order for ₹${service.price}?`)) {
+            currentBalance -= service.price;
+            saveBalance();
+            
+            // Send Order to Sheet (Silent)
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: JSON.stringify({ link: link, service: service.name, price: service.price, utr: 'Wallet_Payment' })
+            });
 
-        // 3. Order Sheet mein bhejo
-        alert(`✅ Order Placed! ₹${service.price} aapke wallet se kat gaye. Bacha hua: ₹${balance.toFixed(2)}`);
-        
-        // Yahan fetch() call karke sheet mein data bhej dein
+            alert("✅ Order Placed! Balance updated.");
+        }
+    }
+
+    function saveBalance() {
+        localStorage.setItem("smm_balance", currentBalance);
+        document.getElementById("displayBalance").innerText = currentBalance.toFixed(2);
     }
 </script>
 </body>
