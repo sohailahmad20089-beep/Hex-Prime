@@ -3,125 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMMbyAS - Open Panel</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>SMMbyAS - Direct API Test</title>
     <style>
-        :root { --bg: #0b0f1a; --card: #161b2d; --primary: #38bdf8; --accent: #22c55e; --text: #ffffff; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 15px; }
-        .container { max-width: 480px; margin: auto; }
-        .header { text-align: center; padding: 20px 0; border-bottom: 1px solid #2d3748; margin-bottom: 20px; }
-        .card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid #2d3748; box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
-        label { display: block; margin: 15px 0 5px; font-size: 13px; color: #a0aec0; font-weight: 600; }
-        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #2d3748; background: #0b0f1a; color: white; box-sizing: border-box; font-size: 15px; outline: none; }
-        .wallet-bar { background: linear-gradient(90deg, #1e293b, #334155); padding: 12px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-left: 4px solid var(--primary); }
-        .btn-pay { width: 100%; background: var(--accent); color: white; border: none; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3); }
-        .btn-add { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        :root { --primary: #38bdf8; --bg: #0f172a; --card: #1e293b; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .test-box { background: var(--card); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; border: 1px solid #334155; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
+        input { width: 100%; padding: 15px; margin: 15px 0; border-radius: 10px; border: 1px solid #334155; background: #0b0f1a; color: white; box-sizing: border-box; outline: none; }
+        button { width: 100%; background: var(--primary); color: #000; border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.3s; }
+        button:disabled { background: #475569; cursor: not-allowed; }
+        #status { margin-top: 15px; font-size: 14px; color: #94a3b8; word-wrap: break-word; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1 style="margin:0; color:var(--primary); font-size:24px;">SMMbyAS <span style="color:white">MODS</span></h1>
-        <p style="font-size:12px; color:#a0aec0; margin:5px 0;">Automated API Panel - StarOfSMM</p>
-    </div>
-
-    <div class="wallet-bar">
-        <div>
-            <span style="font-size:11px; color:#a0aec0; display:block;">Your Balance</span>
-            <span style="font-size:18px; font-weight:bold;">₹<span id="balText">0.00</span></span>
-        </div>
-        <button class="btn-add" onclick="alert('Contact Admin to Add Funds!')">Add Fund</button>
-    </div>
-
-    <div class="card">
-        <label>YOUR WHATSAPP NUMBER (For Wallet)</label>
-        <input type="number" id="userMobile" placeholder="Enter number to sync balance" oninput="fetchBalance()">
-
-        <label>SERVICE</label>
-        <select id="serviceSelect" onchange="calcPrice()">
-            <option value='{"id": 9259, "price": 4}'>Instagram Views (Fast) - ₹4</option>
-        </select>
-
-        <label>INSTAGRAM LINK</label>
-        <input type="text" id="targetLink" placeholder="https://instagram.com/reel/...">
-
-        <label>QUANTITY</label>
-        <input type="number" id="qty" value="1000" oninput="calcPrice()">
-
-        <div style="text-align:center; margin:20px 0;">
-            <span style="font-size:13px; color:#a0aec0;">Total Cost:</span>
-            <div style="font-size:26px; font-weight:900; color:var(--primary);">₹<span id="costText">4.00</span></div>
-        </div>
-
-        <button class="btn-pay" id="orderBtn" onclick="placeOrder()">Order with Wallet</button>
-    </div>
+<div class="test-box">
+    <h2 style="color:var(--primary); margin-bottom:10px;">API Direct Test</h2>
+    <p style="font-size:12px; color:#94a3b8;">Service: Insta Views (ID: 9259)</p>
+    
+    <input type="text" id="orderLink" placeholder="Paste Instagram Link Here">
+    <input type="number" id="orderQty" value="1000">
+    
+    <button id="testBtn" onclick="runTest()">🚀 SEND ORDER TO STAROFSMM</button>
+    
+    <div id="status">Ready to test...</div>
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxnJ_EoHG1W2Om0K5VX5UeUNRM-9BwQfLXQ9aIqWstYp3WTes_P20UrW8gU74RnhNskNw/exec";
-    
-    let currentBalance = 0;
+    // Aapka naya URL maine yahan set kar diya hai
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxe-LGDY8KJBUzTUz0zBdp6wVabud0uluLdqnb7SXy6cVRzEHBcZ5hftlnIkDzTTypiYQ/exec";
 
-    // Jaise hi number daale, balance apne aap dikhe
-    async function fetchBalance() {
-        const mobile = document.getElementById("userMobile").value;
-        if(mobile.length >= 10) {
-            try {
-                const res = await fetch(`${SCRIPT_URL}?action=getBalance&mobile=${mobile}`);
-                const data = await res.json();
-                if(data.msg === "OK") {
-                    currentBalance = data.data;
-                    document.getElementById("balText").innerText = currentBalance.toFixed(2);
-                }
-            } catch(e) {}
-        }
-    }
+    async function runTest() {
+        const link = document.getElementById("orderLink").value.trim();
+        const qty = document.getElementById("orderQty").value;
+        const btn = document.getElementById("testBtn");
+        const status = document.getElementById("status");
 
-    function calcPrice() {
-        const s = JSON.parse(document.getElementById("serviceSelect").value);
-        const q = document.getElementById("qty").value;
-        const total = (s.price * q / 1000).toFixed(2);
-        document.getElementById("costText").innerText = total;
-    }
+        if(!link) return alert("Bhai pehle link toh daalo!");
 
-    async function placeOrder() {
-        const mobile = document.getElementById("userMobile").value;
-        const link = document.getElementById("targetLink").value;
-        const sVal = JSON.parse(document.getElementById("serviceSelect").value);
-        const q = document.getElementById("qty").value;
-        const cost = (sVal.price * q / 1000);
-
-        if(!mobile || !link) return alert("Pehle Number aur Link daalein!");
-        if(currentBalance < cost) return alert("Balance nahi hai! Admin se contact karein.");
-
-        const btn = document.getElementById("orderBtn");
-        btn.innerText = "Processing... ⏳";
         btn.disabled = true;
+        btn.innerText = "Connecting API... ⏳";
+        status.innerText = "Request bhej raha hoon...";
 
         try {
-            const res = await fetch(SCRIPT_URL, {
+            const response = await fetch(SCRIPT_URL, {
                 method: "POST",
+                mode: "no-cors", // Direct post for testing
                 body: JSON.stringify({
-                    action: "placeOrder",
-                    mobile: mobile,
-                    serviceID: sVal.id,
+                    serviceID: 9259,
                     link: link,
-                    quantity: q,
-                    price: cost
+                    quantity: qty
                 })
             });
-            const result = await res.json();
-            if(result.msg === "Success") {
-                alert("✅ Done! Order ID: " + result.data);
-                fetchBalance(); // Balance refresh
-            } else {
-                alert("Error: " + result.msg);
-            }
-        } catch(e) { alert("API Error!"); }
-        btn.innerText = "Order with Wallet";
+
+            // Note: no-cors mein response body nahi dikhti, par order chala jata hai
+            status.innerHTML = "✅ Request Sent!<br>Ab **StarOfSMM** dashboard check karein.";
+            alert("Order Request Bhej di gayi hai! StarOfSMM mein 'Orders' page check karein.");
+            
+        } catch(e) {
+            status.innerText = "❌ Error: " + e.message;
+            alert("Kuch gadbad hui! Script check karein.");
+        }
+        
         btn.disabled = false;
+        btn.innerText = "🚀 SEND ORDER TO STAROFSMM";
     }
 </script>
+
 </body>
 </html>
