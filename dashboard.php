@@ -1,12 +1,3 @@
-<?php
-session_start();
-
-if(!isset($_SESSION['user'])){
-    header("Location: index.php");
-    exit();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +12,6 @@ body {
     margin: 0;
 }
 
-/* Header */
 .header {
     background: #fff;
     padding: 15px;
@@ -31,7 +21,6 @@ body {
     text-align: center;
 }
 
-/* Cards */
 .card {
     background: #fff;
     margin: 10px;
@@ -40,7 +29,6 @@ body {
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-/* Icons */
 .icons {
     display: flex;
     flex-wrap: wrap;
@@ -57,7 +45,6 @@ body {
     box-shadow: 0 0 3px rgba(0,0,0,0.1);
 }
 
-/* Form */
 input, select {
     width: 100%;
     padding: 10px;
@@ -85,62 +72,20 @@ button {
 ssmbyas Panel
 </div>
 
-<!-- Stats -->
 <div class="card">
-<h3>10973190</h3>
-<p>Panel Orders</p>
+<h3>Demo Dashboard</h3>
+<p>Welcome to your panel</p>
 </div>
 
 <div class="card">
-<h3>₹0.61</h3>
-<p>Account Balance</p>
-</div>
-
-<div class="card">
-<h3>₹4.08</h3>
-<p>Spent Balance</p>
-</div>
-
-<!-- Icons -->
-<div class="icons">
-<div class="icon">📋</div>
-<div class="icon">🎵</div>
-<div class="icon">📸</div>
-<div class="icon">▶️</div>
-<div class="icon">📘</div>
-<div class="icon">✈️</div>
-<div class="icon">❌</div>
-<div class="icon">💬</div>
-</div>
-
-<!-- Order Form -->
-<div class="card">
-
 <h3>New Order</h3>
 
-<label>Category</label>
 <select>
 <option>TikTok Followers</option>
 </select>
 
-<label>Service</label>
-<select>
-<option>3344 - TikTok Followers</option>
-</select>
-
-<label>Description</label>
-<p style="background:#f1f1f1;padding:10px;border-radius:8px;">
-⚠️ Please Read the Description<br>
-- Link: TikTok Username<br>
-- Speed: Fast<br>
-- Start: 0-10 Minutes<br>
-</p>
-
-<label>Link</label>
 <input type="text" placeholder="Enter Link">
-
-<label>Quantity</label>
-<input type="number" placeholder="Enter Quantity">
+<input type="number" placeholder="Quantity">
 
 <button>Submit Order</button>
 
