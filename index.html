@@ -1,13 +1,3 @@
-<?php
-session_start();
-
-if(isset($_POST['login'])){
-    $_SESSION['user'] = $_POST['username'];
-    header("Location: dashboard.php");
-    exit();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -65,10 +55,13 @@ button:hover {
 <div class="container">
     <h2>ssmbyas</h2>
 
-    <form method="POST" action="index.php">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit" name="login">Sign In</button>
+    <!-- NO POST METHOD -->
+    <form action="dashboard.html">
+        <input type="text" placeholder="Username" required>
+        <input type="password" placeholder="Password" required>
+
+        <!-- Direct redirect button -->
+        <button type="submit">Sign In</button>
     </form>
 </div>
 
