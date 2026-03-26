@@ -1,81 +1,35 @@
+<?php
+session_start();
+
+if(isset($_POST['login'])){
+    $_SESSION['user'] = $_POST['username'];
+    header("Location: dashboard.php");
+}
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ssmbyas - SMM Panel</title>
-
+<title>ssmbyas Login</title>
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f7fb;
-    margin: 0;
-}
-
-.container {
-    max-width: 400px;
-    margin: 60px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-h1 {
-    text-align: center;
-    color: #007bff;
-}
-
-p {
-    text-align: center;
-    color: #555;
-}
-
-input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-button {
-    width: 100%;
-    padding: 12px;
-    background: #007bff;
-    border: none;
-    color: #fff;
-    font-size: 16px;
-    border-radius: 5px;
-}
-
-button:hover {
-    background: #0056b3;
-}
-
-.link {
-    text-align: center;
-    margin-top: 10px;
-}
+body{font-family:Arial;background:#f5f7fb;}
+.box{max-width:400px;margin:80px auto;background:#fff;padding:20px;border-radius:10px;}
+input{width:100%;padding:10px;margin:10px 0;}
+button{width:100%;padding:10px;background:#4f46e5;color:#fff;border:none;}
 </style>
-
 </head>
+
 <body>
 
-<div class="container">
-    <h1>ssmbyas</h1>
-    <p>#1 Cheapest SMM Panel</p>
+<div class="box">
+<h2>ssmbyas</h2>
 
-    <form method="POST" action="">
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="password" name="password" placeholder="Password" required>
+<form method="POST">
+<input type="text" name="username" placeholder="Username" required>
+<input type="password" name="password" placeholder="Password" required>
+<button name="login">Login</button>
+</form>
 
-        <button type="submit">Sign In</button>
-    </form>
-
-    <div class="link">
-        <p>Don't have an account? <a href="#">Sign up</a></p>
-    </div>
 </div>
 
 </body>
