@@ -3,159 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMMbyAS - Pro Panel</title>
+    <title>SMMbyAS - Professional</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary: #6366f1; --bg: #f8fafc; --card: #fff; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
-        .screen { display: none; max-width: 500px; margin: 0 auto; min-height: 100vh; background: #fff; }
+        :root { --primary: #6366f1; --bg: #f8fafc; --success: #10b981; --danger: #ef4444; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; overflow-x: hidden; }
+        .screen { display: none; max-width: 500px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; }
         .active { display: block; }
+        .card { background: #fff; margin: 12px; padding: 18px; border-radius: 20px; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px rgba(0,0,0,0.03); }
+        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; margin-bottom: 12px; outline: none; box-sizing: border-box; }
+        .btn-main { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: 800; cursor: pointer; }
         
-        /* Icon Grid like Image */
-        .icon-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 15px; }
-        .icon-item { background: #f1f5f9; padding: 12px; border-radius: 10px; text-align: center; color: var(--primary); font-size: 18px; cursor: pointer; transition: 0.3s; }
-        .icon-item:hover { background: var(--primary); color: white; }
-
-        /* Stats Card */
-        .stat-card { background: #fff; margin: 10px 15px; padding: 20px; border-radius: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .stat-icon { background: #eef2ff; color: var(--primary); padding: 15px; border-radius: 12px; font-size: 20px; }
+        /* MRSMM Style UI */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px 15px; }
+        .stat-box { background: #fff; padding: 15px; border-radius: 15px; border: 1px solid #f1f5f9; text-align: center; }
+        .icon-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 10px 15px; }
+        .icon-item { background: #f8fafc; padding: 12px; border-radius: 12px; text-align: center; color: var(--primary); font-size: 18px; cursor: pointer; border: 1px solid #eee; }
         
         /* Admin User Box */
-        .admin-box { border: 1px solid #e2e8f0; margin: 15px; border-radius: 15px; padding: 15px; }
-        .status-badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; }
-        .pending { background: #fef3c7; color: #92400e; }
-        .processing { background: #e0f2fe; color: #0369a1; }
-        .completed { background: #dcfce7; color: #166534; }
+        .admin-user-card { border: 1.5px solid #eee; border-radius: 15px; margin: 15px; padding: 15px; background: #fff; }
+        .status-btn { padding: 5px 10px; border-radius: 8px; border: none; font-size: 10px; font-weight: bold; cursor: pointer; }
+        .badge { padding: 3px 8px; border-radius: 5px; font-size: 10px; font-weight: 800; }
+        .pending { background: #fef3c7; color: #b45309; }
+        .completed { background: #dcfce7; color: #15803d; }
 
-        input, select { width: 100%; padding: 14px; border-radius: 12px; border: 1.5px solid #e2e8f0; margin-bottom: 12px; box-sizing: border-box; }
-        .btn-main { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--primary); color: white; font-weight: 800; cursor: pointer; }
+        .nav-bar { display: flex; position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; border-top: 1px solid #eee; padding: 10px 0; justify-content: space-around; z-index: 1000; }
+        .nav-link { text-align: center; color: #94a3b8; font-size: 10px; font-weight: 700; cursor: pointer; text-decoration: none; }
+        .nav-link.active-nav { color: var(--primary); }
     </style>
 </head>
 <body>
 
-    <div id="user-panel" class="screen active">
-        <div style="padding: 20px; background: #fff;">
-            <h2 style="color:var(--primary); font-weight: 900;">MRSMM.ORG <span style="font-size: 12px; color: #64748b;">CLONE</span></h2>
+    <div id="login-screen" class="screen active">
+        <div style="padding: 80px 20px; text-align: center;">
+            <h1 style="color:var(--primary); font-size:38px; font-weight:900; letter-spacing:-2px;">SMMbyAS</h1>
+            <div class="card">
+                <input type="text" id="l-user" placeholder="Username">
+                <input type="password" id="l-pass" placeholder="Password">
+                <button class="btn-main" onclick="doLogin()">Login Account</button>
+                <p onclick="toggleScreen('signup-screen')" style="margin-top:20px; cursor:pointer; font-weight:700; color:var(--primary);">Create New Account</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="signup-screen" class="screen">
+        <div style="padding: 40px 20px;">
+            <h2 style="text-align:center;">Register</h2>
+            <div class="card">
+                <input type="text" id="s-user" placeholder="Username">
+                <input type="number" id="s-phone" placeholder="Phone Number">
+                <input type="password" id="s-pass" placeholder="Password">
+                <input type="password" id="s-pass-confirm" placeholder="Confirm Password">
+                <button class="btn-main" onclick="doSignup()">Sign Up Now</button>
+                <p onclick="toggleScreen('login-screen')" style="text-align:center; margin-top:20px; cursor:pointer;">Already have account? Login</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="user-panel" class="screen">
+        <div style="padding: 20px; background: #fff; border-bottom: 1px solid #eee;">
+            <h3 id="displayUser" style="margin:0; color:var(--primary);">Suhel VIP</h3>
         </div>
 
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
-            <div><small>Panel Orders</small><br><b style="font-size: 18px;">10973190</b></div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-wallet"></i></div>
-            <div><small>Account Balance</small><br><b style="font-size: 18px;">₹<span id="u-bal">0.00</span></b></div>
+        <div class="stat-grid">
+            <div class="stat-box">
+                <small style="color:#64748b;">Balance</small><br>
+                <b style="font-size:18px;">₹<span id="u-bal">0.00</span></b>
+            </div>
+            <div class="stat-box">
+                <small style="color:#64748b;">Spent</small><br>
+                <b style="font-size:18px;">₹<span id="u-spent">0.00</span></b>
+            </div>
         </div>
 
         <div class="icon-grid">
             <div class="icon-item"><i class="fab fa-tiktok"></i></div>
             <div class="icon-item"><i class="fab fa-instagram"></i></div>
-            <div class="icon-item"><i class="fab fa-youtube"></i></div>
             <div class="icon-item"><i class="fab fa-facebook"></i></div>
+            <div class="icon-item"><i class="fab fa-youtube"></i></div>
             <div class="icon-item"><i class="fas fa-plus"></i></div>
         </div>
 
-        <div style="padding: 15px;">
-            <div class="card" style="background:#fff; padding: 15px; border-radius: 15px; border: 1px solid #eee;">
+        <div id="order-tab" class="tab-content" style="padding: 10px;">
+            <div class="card">
                 <label><small>Category</small></label>
                 <select id="catSelect">
-                    <option>TikTok Followers [ Fast Speed ]</option>
-                    <option>Instagram Followers [ Real ]</option>
+                    <option>Followers [ Fast Speed ]</option>
                 </select>
                 <label><small>Service</small></label>
-                <select id="srvSelect" onchange="updatePrice()">
-                    <option value="65">3344 - TikTok Followers [ 1M ] - ₹65</option>
-                    <option value="2">Insta Views - ₹2</option>
+                <select id="srvSelect" onchange="calc()">
+                    <option value="65">Insta Followers - ₹65 per 1k</option>
+                    <option value="2">Insta Views - ₹2 per 1k</option>
                 </select>
-                <input type="text" id="orderLink" placeholder="Link: TikTok Username">
-                <input type="number" id="orderQty" placeholder="Quantity" oninput="updatePrice()">
-                <div style="text-align:right; font-weight: 800; margin-bottom: 10px;">Total: ₹<span id="price">0.00</span></div>
-                <button class="btn-main" onclick="placeOrder()">Place Order Now</button>
+                <input type="text" id="orderLink" placeholder="Link">
+                <input type="number" id="orderQty" placeholder="Quantity" oninput="calc()">
+                <div style="text-align:center; margin:10px 0;">
+                    <small>Charge:</small><br>
+                    <b id="priceDisp" style="font-size:22px; color:var(--primary);">₹0.00</b>
+                </div>
+                <button class="btn-main" id="orderBtn" onclick="placeOrder()">Place Order</button>
             </div>
+        </div>
+
+        <div id="history-tab" class="tab-content" style="display:none; padding: 10px;">
+            <h4 style="margin-left:15px;">Order & Fund History</h4>
+            <div id="user-logs"></div>
+        </div>
+
+        <div class="nav-bar">
+            <div class="nav-link active-nav" onclick="showTab('order-tab', this)"><i class="fas fa-plus-circle"></i><br>New</div>
+            <div class="nav-link" onclick="showTab('history-tab', this); renderUserLogs()"><i class="fas fa-history"></i><br>History</div>
+            <div class="nav-link" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i><br>Exit</div>
         </div>
     </div>
 
     <div id="admin-panel" class="screen">
         <div style="background:var(--primary); color:white; padding:20px;">
-            <h3>Admin Control Center</h3>
+            <h3>Admin Dashboard</h3>
+            <p>Total Users: <b id="a-tu">0</b></p>
         </div>
         
-        <div id="admin-orders-list">
+        <div id="admin-user-list">
             </div>
     </div>
 
     <script>
-        const SCRIPT_URL = "YOUR_NEW_DEPLOY_URL"; // Yahan naya URL dalein
-        let db = JSON.parse(localStorage.getItem('smm_db')) || { "suhel": { bal: 500, spent: 0, pass: "123" } };
-        let orders = JSON.parse(localStorage.getItem('smm_orders')) || [];
-        let sessionUser = "suhel"; // Demo ke liye
+        const SCRIPT_URL = "YOUR_SCRIPT_URL_HERE"; // Sheet Script Link Dalein
+        let db = JSON.parse(localStorage.getItem('smm_db')) || {};
+        let logs = JSON.parse(localStorage.getItem('smm_logs')) || [];
+        let sessionUser = null;
 
-        function updatePrice() {
-            let rate = document.getElementById('srvSelect').value;
-            let qty = document.getElementById('orderQty').value;
-            document.getElementById('price').innerText = ((rate/1000)*qty).toFixed(2);
+        // AUTH LOGIC
+        function doSignup() {
+            let u = document.getElementById('s-user').value.trim();
+            let ph = document.getElementById('s-phone').value;
+            let p1 = document.getElementById('s-pass').value;
+            let p2 = document.getElementById('s-pass-confirm').value;
+
+            if(!u || p1 !== p2) return alert("Details check karein!");
+            db[u] = { pass: p1, phone: ph, bal: 0, spent: 0 };
+            save(); alert("Success! Ab Login karein."); toggleScreen('login-screen');
+        }
+
+        function doLogin() {
+            let u = document.getElementById('l-user').value.trim(), p = document.getElementById('l-pass').value;
+            if(u === "admin" && p === "suhel7388") { toggleScreen('admin-panel'); renderAdmin(); return; }
+            if(db[u] && db[u].pass === p) { sessionUser = u; updateUI(); toggleScreen('user-panel'); } else alert("Wrong Login!");
+        }
+
+        // ORDER LOGIC
+        function calc() {
+            let r = document.getElementById('srvSelect').value, q = document.getElementById('orderQty').value;
+            document.getElementById('priceDisp').innerText = "₹" + ((r/1000)*q).toFixed(2);
         }
 
         async function placeOrder() {
-            let cost = Number(document.getElementById('price').innerText);
+            let cost = Number(document.getElementById('priceDisp').innerText.replace('₹',''));
+            let link = document.getElementById('orderLink').value, qty = document.getElementById('orderQty').value;
             let srv = document.getElementById('srvSelect').options[document.getElementById('srvSelect').selectedIndex].text;
-            let link = document.getElementById('orderLink').value;
-            
-            if(db[sessionUser].bal < cost) return alert("Paisa kam hai!");
 
-            // Local Update
+            if(db[sessionUser].bal < cost) return alert("Paisa nahi hai!");
+
             db[sessionUser].bal -= cost;
-            let newOrder = { 
-                id: Date.now(), 
-                user: sessionUser, 
-                service: srv, 
-                link: link, 
-                cost: cost, 
-                status: "Pending" 
-            };
-            orders.unshift(newOrder);
+            db[sessionUser].spent += cost;
             
-            // Fix: Sheets Sync
-            try {
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ type: "ORDER", ...newOrder })
-                });
-            } catch(e) { console.log("Sheets offline but local saved"); }
+            let oId = Date.now();
+            logs.unshift({ id: oId, type: "ORDER", user: sessionUser, desc: srv, amt: cost, status: "Pending", date: new Date().toLocaleString() });
+            
+            save(); updateUI(); alert("Order Placed!");
 
-            localStorage.setItem('smm_db', JSON.stringify(db));
-            localStorage.setItem('smm_orders', JSON.stringify(orders));
-            alert("Order Placed!");
-            location.reload();
+            // Send to Sheets
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ type: "ORDER", user: sessionUser, srv: srv, link: link, qty: qty, cost: cost }) });
         }
 
-        // Admin Function to Change Status
-        function updateStatus(id, newStatus) {
-            let order = orders.find(o => o.id == id);
-            if(order) {
-                order.status = newStatus;
-                localStorage.setItem('smm_orders', JSON.stringify(orders));
-                alert("Status Updated to " + newStatus);
-                renderAdmin();
-            }
-        }
-
+        // ADMIN RENDER
         function renderAdmin() {
-            let cont = document.getElementById('admin-orders-list');
-            cont.innerHTML = "<h4>User Orders Control</h4>";
-            orders.forEach(o => {
+            let cont = document.getElementById('admin-user-list');
+            cont.innerHTML = "";
+            Object.keys(db).forEach(u => {
+                let uLogs = logs.filter(l => l.user === u);
                 cont.innerHTML += `
-                <div class="admin-box">
-                    <b>User: ${o.user}</b> <span class="status-badge ${o.status.toLowerCase()}">${o.status}</span><br>
-                    <small>${o.service}</small><br>
-                    <div style="margin-top:10px; display:flex; gap:5px;">
-                        <button onclick="updateStatus(${o.id}, 'Processing')" style="font-size:10px;">Process</button>
-                        <button onclick="updateStatus(${o.id}, 'Completed')" style="font-size:10px;">Complete</button>
+                <div class="admin-user-card">
+                    <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding-bottom:10px;">
+                        <b>User: ${u}</b> <b style="color:var(--primary)">₹${db[u].bal}</b>
+                    </div>
+                    <p style="font-size:12px;">Phone: ${db[u].phone} | Pass: ${db[u].pass}</p>
+                    <div style="max-height:100px; overflow-y:auto; font-size:10px; background:#f8fafc; padding:5px; margin-bottom:10px;">
+                        ${uLogs.map(l => `[${l.type}] ₹${l.amt} - ${l.status}`).join('<br>')}
+                    </div>
+                    <div style="display:flex; gap:5px;">
+                        <input type="number" id="in-${u}" placeholder="Amt" style="padding:5px; margin:0;">
+                        <button onclick="addBal('${u}')" style="background:green; color:white; border:none; padding:5px 10px; border-radius:5px;">Add</button>
+                        <button onclick="changeStatus('${u}', 'Completed')" style="background:blue; color:white; border:none; padding:5px 10px; border-radius:5px;">Set Done</button>
                     </div>
                 </div>`;
+            });
+            document.getElementById('a-tu').innerText = Object.keys(db).length;
+        }
+
+        function addBal(u) {
+            let a = Number(document.getElementById('in-'+u).value);
+            db[u].bal += a;
+            logs.unshift({ type: "FUND", user: u, desc: "Admin Added", amt: a, status: "Success", date: new Date().toLocaleString() });
+            save(); renderAdmin(); alert("Added!");
+        }
+
+        function changeStatus(u, stat) {
+            let log = logs.find(l => l.user === u && l.status === "Pending");
+            if(log) log.status = stat;
+            save(); renderAdmin(); alert("Status Changed!");
+        }
+
+        // HELPERS
+        function save() { localStorage.setItem('smm_db', JSON.stringify(db)); localStorage.setItem('smm_logs', JSON.stringify(logs)); }
+        function toggleScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        function showTab(id, el) { document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none'); document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active-nav')); document.getElementById(id).style.display = 'block'; el.classList.add('active-nav'); }
+        function updateUI() { document.getElementById('u-bal').innerText = db[sessionUser].bal.toFixed(2); document.getElementById('u-spent').innerText = db[sessionUser].spent.toFixed(2); document.getElementById('displayUser').innerText = sessionUser; }
+        function renderUserLogs() {
+            let c = document.getElementById('user-logs'); c.innerHTML = "";
+            logs.filter(l => l.user === sessionUser).forEach(l => {
+                c.innerHTML += `<div class="card" style="font-size:12px;"><b>${l.type}: ${l.desc}</b><br>Amt: ₹${l.amt} | Status: <span class="badge ${l.status.toLowerCase()}">${l.status}</span></div>`;
             });
         }
     </script>
 </body>
 </html>
+
