@@ -3,31 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMMbyAS - Pro Panel</title>
+    <title>Growfansite - SMMbyAS</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --blue: #0081ff; --bg: #f4f7fa; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 70px; }
-        .screen { display: none; max-width: 500px; margin: 0 auto; min-height: 100vh; background: #fff; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 75px; }
+        .screen { display: none; max-width: 500px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; }
         .active { display: block; }
         
-        /* Stats & Header */
-        .header { display: flex; justify-content: space-between; padding: 15px; background: #fff; border-bottom: 1px solid #eee; }
-        .stat-card { background: #fff; margin: 10px 15px; padding: 18px; border-radius: 15px; border: 1px solid #eee; display: flex; align-items: center; gap: 15px; }
-        .stat-icon { color: var(--blue); background: #f0f7ff; padding: 12px; border-radius: 12px; }
+        /* Login Page (Growfansite Clone) */
+        .brand-name { font-size: 32px; font-weight: 900; color: var(--blue); text-decoration: underline; padding: 40px 20px; }
+        .big-input { width: 100%; padding: 16px; border-radius: 12px; border: 1.5px solid #e0e6ed; box-sizing: border-box; margin-bottom: 15px; font-size: 15px; outline: none; }
+        .btn-blue { width: 100%; padding: 18px; border-radius: 15px; border: none; background: var(--blue); color: white; font-weight: 700; font-size: 16px; cursor: pointer; }
 
-        /* Icon Grid */
+        /* Stats & UI */
+        .stat-card { background: #fff; margin: 10px 15px; padding: 15px; border-radius: 15px; border: 1px solid #eee; display: flex; align-items: center; gap: 15px; }
+        .stat-icon { color: var(--blue); background: #f0f7ff; padding: 12px; border-radius: 12px; }
         .icon-grid { display: flex; gap: 10px; padding: 15px; overflow-x: auto; scrollbar-width: none; }
         .icon-item { flex: 0 0 55px; height: 55px; background: #fff; border: 1.5px solid #eee; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; }
         .icon-item.active-icon { border-color: var(--blue); color: var(--blue); background: #f0f7ff; }
 
-        /* Full Width Big Inputs */
-        .order-container { padding: 15px; }
-        .big-input { width: 100%; padding: 16px; border-radius: 12px; border: 1.5px solid #e0e6ed; box-sizing: border-box; margin-bottom: 15px; font-size: 15px; outline: none; }
-        .btn-order { width: 100%; padding: 18px; border-radius: 15px; border: none; background: var(--blue); color: white; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,129,255,0.3); }
+        /* Admin Styles */
+        .pending-card { border-left: 5px solid #f59e0b; background: #f8fafc; margin: 10px; padding: 15px; border-radius: 12px; border: 1px solid #eee; }
+        .status-badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        .pending { background: #fef3c7; color: #92400e; }
+        .success { background: #dcfce7; color: #15803d; }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; }
         .nav-item { text-align: center; font-size: 11px; color: #999; cursor: pointer; }
         .nav-item.active { color: var(--blue); font-weight: 700; }
     </style>
@@ -35,32 +38,31 @@
 <body>
 
     <div id="login-screen" class="screen active">
-        <div style="padding: 60px 20px;">
-            <h1 style="color:var(--blue); font-size:32px; font-weight:900;">Growfansite</h1>
-            <div style="margin-top:40px;">
-                <input type="text" id="l-user" class="big-input" placeholder="Username">
-                <input type="password" id="l-pass" class="big-input" placeholder="Password">
-                <button class="btn-order" onclick="doLogin()">Sign in</button>
-                <p style="text-align:center; margin-top:20px;">New user? <span style="color:var(--blue); cursor:pointer;" onclick="toggleScreen('signup-screen')">Sign up</span></p>
-            </div>
+        <div class="brand-name">Growfansite</div>
+        <div style="padding: 0 20px;">
+            <input type="text" id="l-user" class="big-input" placeholder="Username">
+            <input type="password" id="l-pass" class="big-input" placeholder="Password">
+            <button class="btn-blue" onclick="doLogin()">Sign in</button>
+            <p style="text-align:center;">No account? <span style="color:var(--blue); cursor:pointer;" onclick="toggleScreen('signup-screen')">Sign up</span></p>
         </div>
+        <img src="https://i.ibb.co/L5fX0F1/login-bottom.png" style="width:100%; position:absolute; bottom:0;" alt="">
     </div>
 
     <div id="signup-screen" class="screen">
-        <div style="padding: 40px 20px;">
-            <h2 style="color:var(--blue)">Register Account</h2>
+        <div class="brand-name">Register</div>
+        <div style="padding: 0 20px;">
             <input type="text" id="s-user" class="big-input" placeholder="Username">
             <input type="number" id="s-phone" class="big-input" placeholder="Phone Number">
             <input type="password" id="s-pass" class="big-input" placeholder="Password">
-            <button class="btn-order" onclick="doSignup()">Create Account</button>
-            <p onclick="toggleScreen('login-screen')" style="text-align:center; margin-top:15px; cursor:pointer;">Back to Login</p>
+            <button class="btn-blue" onclick="doSignup()">Create Account</button>
+            <p style="text-align:center;" onclick="toggleScreen('login-screen')">Already have an account? Login</p>
         </div>
     </div>
 
     <div id="user-panel" class="screen">
-        <div class="header">
-            <b style="color:var(--blue); font-size:22px;">MRSMM.ORG</b>
-            <i class="fas fa-bars"></i>
+        <div style="padding: 15px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+            <b style="color:var(--blue); font-size: 20px;">MRSMM.ORG</b>
+            <span id="displayUser" style="font-size: 12px; font-weight: 700;"></span>
         </div>
 
         <div class="stat-card">
@@ -72,53 +74,72 @@
             <div><small style="color:#666;">Spent balance</small><br><b>₹<span id="u-spent">0.00</span></b></div>
         </div>
 
-        <div class="icon-grid">
-            <div class="icon-item active-icon" onclick="filterSrv('TikTok', this)"><i class="fab fa-tiktok"></i></div>
-            <div class="icon-item" onclick="filterSrv('Instagram', this)"><i class="fab fa-instagram"></i></div>
-            <div class="icon-item" onclick="filterSrv('YouTube', this)"><i class="fab fa-youtube"></i></div>
-            <div class="icon-item" onclick="filterSrv('Telegram', this)"><i class="fab fa-telegram"></i></div>
+        <div id="new-order-tab" class="tab-content">
+            <div class="icon-grid">
+                <div class="icon-item active-icon" onclick="filterSrv('TikTok', this)"><i class="fab fa-tiktok"></i></div>
+                <div class="icon-item" onclick="filterSrv('Instagram', this)"><i class="fab fa-instagram"></i></div>
+                <div class="icon-item" onclick="filterSrv('YouTube', this)"><i class="fab fa-youtube"></i></div>
+                <div class="icon-item" onclick="filterSrv('Telegram', this)"><i class="fab fa-telegram"></i></div>
+            </div>
+
+            <div style="padding: 15px;">
+                <label style="font-size:12px; font-weight:700;">Service Category</label>
+                <select id="srvSelect" class="big-input" onchange="calcPrice()"></select>
+                <input type="text" id="orderLink" class="big-input" placeholder="Paste Link Here">
+                <input type="number" id="orderQty" class="big-input" placeholder="Quantity (e.g. 10000)" oninput="calcPrice()">
+                
+                <div style="text-align:center; padding:15px; background:#f0f7ff; border-radius:12px; margin-bottom:15px;">
+                    <small>Charge:</small><br><b id="p-disp" style="font-size:28px; color:var(--blue);">₹0.00</b>
+                </div>
+                <button class="btn-blue" onclick="placeOrder()">Place Order Now</button>
+            </div>
         </div>
 
-        <div class="order-container">
-            <label style="font-size:13px; font-weight:600; margin-left:5px;">Service Category</label>
-            <select id="srvSelect" class="big-input" onchange="calcPrice()">
-                </select>
-            <input type="text" id="orderLink" class="big-input" placeholder="Paste Link Here">
-            <input type="number" id="orderQty" class="big-input" placeholder="Quantity (e.g. 10000)" oninput="calcPrice()">
-            
-            <div style="text-align:center; padding:15px; background:#f0f7ff; border-radius:12px; margin-bottom:20px;">
-                <small>Total Charge:</small><br>
-                <b id="p-disp" style="font-size:28px; color:var(--blue);">₹0.00</b>
+        <div id="add-fund-tab" class="tab-content" style="display:none; padding:15px;">
+            <div style="text-align:center; border:1px solid #eee; padding:20px; border-radius:20px;">
+                <h3>Scan & Pay</h3>
+                <input type="number" id="f-amt" class="big-input" placeholder="Amount (₹)" oninput="updateQR()">
+                <div id="qrBox" style="display:none; margin:15px 0;">
+                    <img id="qrImg" style="width:180px; border:5px solid #fff; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
+                </div>
+                <input type="text" id="f-utr" class="big-input" placeholder="12 Digit UTR Number">
+                <button class="btn-blue" style="background:#10b981;" onclick="submitFund()">Submit Fund Request</button>
             </div>
-            
-            <button class="btn-order" onclick="placeOrder()">Place Order Now</button>
+        </div>
+
+        <div id="history-tab" class="tab-content" style="display:none; padding:15px;">
+            <h4 style="margin-left:5px;">Your Activity</h4>
+            <div id="history-list"></div>
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active"><i class="fas fa-shopping-cart"></i><br>New</div>
-            <div class="nav-item" onclick="alert('Coming soon')"><i class="fas fa-plus-circle"></i><br>Add Fund</div>
-            <div class="nav-item" onclick="alert('History coming soon')"><i class="fas fa-history"></i><br>History</div>
-            <div class="nav-item" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i><br>Logout</div>
+            <div class="nav-item active" onclick="showTab('new-order-tab', this)"><i class="fas fa-plus-circle"></i><br>New</div>
+            <div class="nav-item" onclick="showTab('add-fund-tab', this)"><i class="fas fa-wallet"></i><br>Add Fund</div>
+            <div class="nav-item" onclick="showTab('history-tab', this); renderHistory()"><i class="fas fa-history"></i><br>History</div>
+            <div class="nav-item" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i><br>Exit</div>
         </div>
     </div>
 
     <div id="admin-panel" class="screen">
-        <div style="background:var(--blue); color:white; padding:20px;">
-            <h3>Admin Dashboard</h3>
-            <p>Welcome, Suhel Bhai</p>
+        <div style="background:#1e293b; color:white; padding:20px;">
+            <h3 style="margin:0;">Admin Master Control</h3>
+            <p style="font-size:12px; opacity:0.8;">Fund Requests Approval</p>
         </div>
-        <div id="admin-content" style="padding:15px;">
-            <button class="btn-order" style="background:#333" onclick="location.reload()">Exit Admin</button>
+        <div id="admin-requests" style="padding:10px;"></div>
+        <div style="padding:20px;">
+            <button class="btn-blue" style="background:#64748b" onclick="location.reload()">Back to Login</button>
         </div>
     </div>
 
     <script>
+        const SCRIPT_URL = "YOUR_APPS_SCRIPT_URL_HERE"; 
         let db = JSON.parse(localStorage.getItem('smm_db')) || {};
+        let logs = JSON.parse(localStorage.getItem('smm_logs')) || [];
         let sessionUser = null;
 
         const services = {
-            'TikTok': [{n: 'TikTok Views - ₹2 per 1k', p: 2}, {n: 'TikTok Followers', p: 65}],
-            'Instagram': [{n: 'Insta Views - ₹1 per 1k', p: 1}, {n: 'Insta Followers', p: 50}],
+            'TikTok': [{n: 'TikTok Views - ₹2 per 1k', p: 2}, {n: 'TikTok Followers - ₹65 per 1k', p: 65}],
+            'Instagram': [{n: 'Insta Views - ₹1 per 1k', p: 1}, {n: 'Insta Followers - ₹50 per 1k', p: 50}],
             'YouTube': [{n: 'YouTube Views - ₹120 per 1k', p: 120}],
             'Telegram': [{n: 'Members - ₹40 per 1k', p: 40}]
         };
@@ -132,62 +153,90 @@
         }
 
         function calcPrice() {
-            let rate = document.getElementById('srvSelect').value;
-            let qty = document.getElementById('orderQty').value || 0;
-            // Formula: (Price / 1000) * Quantity
-            let total = (rate / 1000) * qty;
+            let r = document.getElementById('srvSelect').value;
+            let q = document.getElementById('orderQty').value || 0;
+            let total = (r / 1000) * q;
             document.getElementById('p-disp').innerText = "₹" + total.toFixed(2);
+        }
+
+        function updateQR() {
+            let a = document.getElementById('f-amt').value;
+            let box = document.getElementById('qrBox'), img = document.getElementById('qrImg');
+            if(a >= 1) {
+                box.style.display = 'block';
+                img.src = `https://api.qrserver.com/v1/create-qr-code/?data=upi://pay?pa=7388720012@fam%26am=${a}`;
+            } else { box.style.display = 'none'; }
         }
 
         function doSignup() {
             let u = document.getElementById('s-user').value.trim();
             let p = document.getElementById('s-pass').value;
-            if(!u || !p) return alert("Fill details");
+            if(!u || !p) return alert("Fill all details!");
             db[u] = { pass: p, bal: 0, spent: 0, phone: document.getElementById('s-phone').value };
-            localStorage.setItem('smm_db', JSON.stringify(db));
-            alert("Signup Success!"); toggleScreen('login-screen');
+            save(); alert("Success! Now Login."); toggleScreen('login-screen');
         }
 
         function doLogin() {
             let u = document.getElementById('l-user').value.trim();
             let p = document.getElementById('l-pass').value.trim();
-            
-            // ADMIN LOGIN CHECK
-            if(u === "admin" && p === "suhel7388") {
-                toggleScreen('admin-panel');
-                return;
-            }
-
-            if(db[u] && db[u].pass === p) {
-                sessionUser = u;
-                updateUI();
-                toggleScreen('user-panel');
-                filterSrv('TikTok', document.querySelector('.icon-item'));
-            } else {
-                alert("Invalid Login!");
-            }
+            if(u === "admin" && p === "suhel7388") { toggleScreen('admin-panel'); renderAdmin(); return; }
+            if(db[u] && db[u].pass === p) { sessionUser = u; updateUI(); toggleScreen('user-panel'); filterSrv('TikTok', document.querySelector('.icon-item')); }
+            else alert("Invalid Login!");
         }
 
         function placeOrder() {
-            let total = Number(document.getElementById('p-disp').innerText.replace('₹',''));
-            if(db[sessionUser].bal < total) return alert("Low Balance!");
-            db[sessionUser].bal -= total;
-            db[sessionUser].spent += total;
-            localStorage.setItem('smm_db', JSON.stringify(db));
-            updateUI();
-            alert("Order Placed Successfully!");
+            let cost = Number(document.getElementById('p-disp').innerText.replace('₹',''));
+            let srv = document.getElementById('srvSelect').options[document.getElementById('srvSelect').selectedIndex].text;
+            if(db[sessionUser].bal < cost) return alert("Low Balance!");
+            db[sessionUser].bal -= cost; db[sessionUser].spent += cost;
+            logs.unshift({ id: Date.now(), user: sessionUser, type: 'ORDER', desc: srv, amt: cost, status: 'Completed', date: new Date().toLocaleString() });
+            save(); updateUI(); alert("Order Placed!");
+            // Sheets Sync
+            fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ type: "ORDER", user: sessionUser, srv: srv, cost: cost }) });
         }
 
-        function toggleScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+        function submitFund() {
+            let a = document.getElementById('f-amt').value, u = document.getElementById('f-utr').value;
+            if(!a || u.length < 10) return alert("Check Amount/UTR!");
+            logs.unshift({ id: "REQ-"+Date.now(), user: sessionUser, type: 'FUND', amt: Number(a), utr: u, status: 'Pending', date: new Date().toLocaleString() });
+            save(); alert("Request sent to Admin!");
+            showTab('history-tab', document.querySelectorAll('.nav-item')[2]); renderHistory();
         }
 
-        function updateUI() {
-            document.getElementById('u-bal').innerText = db[sessionUser].bal.toFixed(2);
-            document.getElementById('u-spent').innerText = db[sessionUser].spent.toFixed(2);
+        function renderAdmin() {
+            let cont = document.getElementById('admin-requests'); cont.innerHTML = "<h4>Pending Funds</h4>";
+            let pending = logs.filter(l => l.type === 'FUND' && l.status === 'Pending');
+            if(pending.length === 0) cont.innerHTML += "<p>No requests</p>";
+            pending.forEach(req => {
+                cont.innerHTML += `<div class="pending-card">
+                    <b>User: ${req.user} | ₹${req.amt}</b><br><small>UTR: ${req.utr}</small><br>
+                    <button onclick="approve('${req.id}')" style="background:green; color:white; border:none; padding:5px 10px; margin-top:5px; border-radius:5px;">Approve</button>
+                    <button onclick="reject('${req.id}')" style="background:red; color:white; border:none; padding:5px 10px; border-radius:5px;">Reject</button>
+                </div>`;
+            });
+        }
+
+        function approve(id) {
+            let req = logs.find(l => l.id === id);
+            if(req && db[req.user]) { db[req.user].bal += req.amt; req.status = "Success"; save(); renderAdmin(); alert("Approved!"); }
+        }
+
+        function reject(id) { let req = logs.find(l => l.id === id); if(req) { req.status = "Rejected"; save(); renderAdmin(); alert("Rejected!"); } }
+
+        function save() { localStorage.setItem('smm_db', JSON.stringify(db)); localStorage.setItem('smm_logs', JSON.stringify(logs)); }
+        function toggleScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        function showTab(id, el) { document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(id).style.display='block'; el.classList.add('active'); }
+        function updateUI() { document.getElementById('u-bal').innerText = db[sessionUser].bal.toFixed(2); document.getElementById('u-spent').innerText = db[sessionUser].spent.toFixed(2); document.getElementById('displayUser').innerText = "Hi, " + sessionUser; }
+        function renderHistory() {
+            let cont = document.getElementById('history-list'); cont.innerHTML = "";
+            logs.filter(l => l.user === sessionUser).forEach(l => {
+                cont.innerHTML += `<div class="stat-card" style="font-size:11px; flex-direction:column; align-items:flex-start;">
+                    <b>${l.type}: ${l.desc || 'Fund Request'}</b>
+                    <span>Amt: ₹${l.amt} | Status: <span class="status-badge ${l.status.toLowerCase()}">${l.status}</span></span>
+                    <small style="color:#999">${l.date}</small>
+                </div>`;
+            });
         }
     </script>
 </body>
 </html>
-
