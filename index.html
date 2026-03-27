@@ -3,29 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMMbyAS - Auto API Panel</title>
+    <title>SMMbyAS Ultra - Admin Control</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --blue: #0081ff; --bg: #f4f7fa; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 75px; }
-        .screen { display: none; max-width: 500px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; }
+        :root { --blue: #0081ff; --bg: #f4f7fa; --dark: #1e293b; --green: #10b981; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding-bottom: 80px; }
+        .screen { display: none; max-width: 500px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
         .active { display: block; }
-        .brand-name { font-size: 32px; font-weight: 900; color: var(--blue); text-decoration: underline; padding: 40px 20px; }
-        .big-input { width: 100%; padding: 16px; border-radius: 12px; border: 1.5px solid #e0e6ed; box-sizing: border-box; margin-bottom: 15px; font-size: 15px; outline: none; }
-        .btn-blue { width: 100%; padding: 18px; border-radius: 15px; border: none; background: var(--blue); color: white; font-weight: 700; font-size: 16px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,129,255,0.3); }
-        .stat-card { background: #fff; margin: 10px 15px; padding: 15px; border-radius: 15px; border: 1px solid #eee; display: flex; align-items: center; gap: 15px; }
-        .stat-icon { color: var(--blue); background: #f0f7ff; padding: 12px; border-radius: 12px; }
-        .icon-grid { display: flex; gap: 10px; padding: 15px; overflow-x: auto; scrollbar-width: none; }
-        .icon-item { flex: 0 0 55px; height: 55px; background: #fff; border: 1.5px solid #eee; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; }
-        .icon-item.active-icon { border-color: var(--blue); color: var(--blue); background: #f0f7ff; }
-        .pending-card { border-left: 5px solid #f59e0b; background: #f8fafc; margin: 10px; padding: 15px; border-radius: 12px; border: 1px solid #eee; }
-        .status-badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 800; }
-        .pending { background: #fef3c7; color: #92400e; }
-        .success { background: #dcfce7; color: #15803d; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 1000; }
-        .nav-item { text-align: center; font-size: 11px; color: #999; cursor: pointer; }
+        .brand-name { font-size: 32px; font-weight: 900; color: var(--blue); text-decoration: underline; padding: 40px 20px; text-align: center; }
+        .big-input { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #e2e8f0; box-sizing: border-box; margin-bottom: 12px; font-size: 15px; outline: none; }
+        .btn-blue { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--blue); color: white; font-weight: 700; cursor: pointer; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
+        .stat-card { background: #fff; padding: 12px; border-radius: 12px; border: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
+        .admin-header { background: var(--dark); color: white; padding: 20px; border-radius: 0 0 20px 20px; }
+        .admin-tool { background: #f8fafc; border: 1px solid #e2e8f0; margin: 15px; padding: 15px; border-radius: 15px; }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; }
+        .nav-item { text-align: center; font-size: 11px; color: #94a3b8; cursor: pointer; }
         .nav-item.active { color: var(--blue); font-weight: 700; }
+        .history-item { border-bottom: 1px solid #f1f5f9; padding: 12px; }
     </style>
 </head>
 <body>
@@ -35,8 +31,8 @@
         <div style="padding: 0 20px;">
             <input type="text" id="l-user" class="big-input" placeholder="Username">
             <input type="password" id="l-pass" class="big-input" placeholder="Password">
-            <button class="btn-blue" onclick="doLogin()">Sign in</button>
-            <p style="text-align:center;">No account? <span style="color:var(--blue); cursor:pointer;" onclick="toggleScreen('signup-screen')">Sign up</span></p>
+            <button class="btn-blue" onclick="doLogin()">Sign In</button>
+            <p style="text-align:center; margin-top:15px;" onclick="toggleScreen('signup-screen')">New? Create Account</p>
         </div>
     </div>
 
@@ -44,207 +40,180 @@
         <div class="brand-name">Register</div>
         <div style="padding: 0 20px;">
             <input type="text" id="s-user" class="big-input" placeholder="Username">
-            <input type="number" id="s-phone" class="big-input" placeholder="Phone">
             <input type="password" id="s-pass" class="big-input" placeholder="Password">
-            <button class="btn-blue" onclick="doSignup()">Create Account</button>
-            <p style="text-align:center;" onclick="toggleScreen('login-screen')">Back to Login</p>
+            <button class="btn-blue" onclick="doSignup()">Sign Up</button>
+            <p style="text-align:center; margin-top:15px;" onclick="toggleScreen('login-screen')">Back to Login</p>
         </div>
     </div>
 
     <div id="user-panel" class="screen">
-        <div style="padding:15px; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-            <b style="color:var(--blue); font-size:20px;">MRSMM.ORG</b>
-            <span id="displayUser" style="font-size:12px; font-weight:700;"></span>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-wallet"></i></div>
-            <div><small>Balance</small><br><b>₹<span id="u-bal">0.00</span></b></div>
-        </div>
-
-        <div id="new-order-tab" class="tab-content">
-            <div class="icon-grid">
-                <div class="icon-item active-icon" onclick="filterSrv('TikTok', this)"><i class="fab fa-tiktok"></i></div>
-                <div class="icon-item" onclick="filterSrv('Instagram', this)"><i class="fab fa-instagram"></i></div>
-                <div class="icon-item" onclick="filterSrv('YouTube', this)"><i class="fab fa-youtube"></i></div>
-            </div>
-
-            <div style="padding:15px;">
-                <label style="font-size:12px; font-weight:700;">Service Category</label>
-                <select id="srvSelect" class="big-input" onchange="calcPrice()"></select>
-                <input type="text" id="orderLink" class="big-input" placeholder="Paste Link Here">
-                <input type="number" id="orderQty" class="big-input" placeholder="Quantity" oninput="calcPrice()">
-                
-                <div style="text-align:center; padding:15px; background:#f0f7ff; border-radius:12px; margin-bottom:15px;">
-                    <small>Charge:</small><br><b id="p-disp" style="font-size:28px; color:var(--blue);">₹0.00</b>
-                </div>
-                <button class="btn-blue" onclick="placeOrder()">Place Order Now</button>
+        <div style="padding:20px; background:var(--blue); color:white; border-radius:0 0 20px 20px;">
+            <small id="displayUser"></small>
+            <h2 style="margin:5px 0;">₹<span id="u-bal">0.00</span></h2>
+            <div style="display:flex; gap:20px; font-size:12px; opacity:0.9;">
+                <span>Spent: ₹<span id="u-spent">0.00</span></span>
+                <span>Orders: <span id="u-orders">0</span></span>
             </div>
         </div>
 
-        <div id="add-fund-tab" class="tab-content" style="display:none; padding:15px; text-align:center;">
-            <h3>Add Funds (Manual)</h3>
-            <input type="number" id="f-amt" class="big-input" placeholder="Amount (₹)" oninput="updateQR()">
-            <div id="qrBox" style="display:none; margin:15px 0;">
-                <img id="qrImg" style="width:180px; border:5px solid #fff; box-shadow:0 5px 15px rgba(0,0,0,0.1);">
-                <p><small>Scan QR & Enter UTR below</small></p>
+        <div id="order-tab" class="tab-content" style="padding:15px;">
+            <label style="font-size:12px; font-weight:700;">Select Service</label>
+            <select id="srvSelect" class="big-input" onchange="calcPrice()">
+                <option value="0.07" data-id="1798">Insta Views (Ultra Fast)</option>
+                <option value="6.15" data-id="3841">Insta Real Likes</option>
+                <option value="25.56" data-id="3165">Insta Followers (HQ)</option>
+            </select>
+            <input type="text" id="orderLink" class="big-input" placeholder="Profile/Video Link">
+            <input type="number" id="orderQty" class="big-input" placeholder="Quantity (Min 100)" oninput="calcPrice()">
+            <div style="background:#f0f7ff; padding:15px; border-radius:12px; text-align:center; margin-bottom:15px;">
+                <small>You Pay:</small><br><b style="font-size:24px; color:var(--blue);" id="p-disp">₹0.00</b>
             </div>
-            <input type="text" id="f-utr" class="big-input" placeholder="12 Digit UTR Number">
-            <button class="btn-blue" style="background:#10b981;" onclick="submitFund()">Submit for Approval</button>
+            <button class="btn-blue" onclick="placeOrder()">Place Order</button>
         </div>
 
         <div id="history-tab" class="tab-content" style="display:none; padding:15px;">
-            <h4>Activity History</h4>
+            <h3>Your Activity</h3>
             <div id="history-list"></div>
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="showTab('new-order-tab', this)"><i class="fas fa-plus-circle"></i><br>New</div>
-            <div class="nav-item" onclick="showTab('add-fund-tab', this)"><i class="fas fa-wallet"></i><br>Add Fund</div>
+            <div class="nav-item active" onclick="showTab('order-tab', this)"><i class="fas fa-shopping-cart"></i><br>Order</div>
             <div class="nav-item" onclick="showTab('history-tab', this); renderHistory()"><i class="fas fa-history"></i><br>History</div>
             <div class="nav-item" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i><br>Logout</div>
         </div>
     </div>
 
     <div id="admin-panel" class="screen">
-        <div style="background:#1e293b; color:white; padding:20px;">
-            <h3>Admin Panel</h3>
-            <p>Approve Fund Requests</p>
+        <div class="admin-header">
+            <h3>Admin Master Control</h3>
+            <div class="stats-grid" style="padding:0;">
+                <div><small>Users</small><br><b id="adm-users">0</b></div>
+                <div><small>Total Bal</small><br><b id="adm-bal">₹0</b></div>
+            </div>
         </div>
-        <div id="admin-requests" style="padding:10px;"></div>
-        <button class="btn-blue" style="margin:20px; background:#64748b; width:90%;" onclick="location.reload()">Exit Admin</button>
+
+        <div class="admin-tool">
+            <label><b>Profit Margin: <span id="margin-val">50</span>%</b></label>
+            <input type="range" id="margin-slider" min="10" max="100" value="50" style="width:100%; margin:10px 0;" oninput="updateMargin()">
+            <p style="font-size:10px; color:#64748b;">(Example: If MRSMM price is ₹10, User will see ₹15 at 50% margin)</p>
+        </div>
+
+        <div class="admin-tool">
+            <label><b>Add Balance to User</b></label>
+            <input type="text" id="adm-target-user" class="big-input" placeholder="Target Username" style="margin-top:10px;">
+            <input type="number" id="adm-amount" class="big-input" placeholder="Amount (₹)">
+            <button onclick="addBalanceAdmin()" class="btn-blue" style="background:var(--green);">Add Cash ✅</button>
+        </div>
+
+        <button class="btn-blue" style="background:#64748b; margin:15px; width:90%;" onclick="location.reload()">Exit Admin</button>
     </div>
-<script>
-    // --- API CONFIGURATION ---
-    const API_URL = "https://mrsmm.org/api/v2";
-    const API_KEY = "adb83355244cecd3cdceff120d499460";
 
-    let db = JSON.parse(localStorage.getItem('smm_db')) || {};
-    let logs = JSON.parse(localStorage.getItem('smm_logs')) || [];
-    let sessionUser = null;
+    <script>
+        const API_URL = "https://mrsmm.org/api/v2";
+        const API_KEY = "adb83355244cecd3cdceff120d499460";
 
-    // --- YAHAN ADD KIYA HAI SERVICES KO ---
-    const services = {
-        'Instagram': [
-            {n: 'Insta Views [Ultra Fast] - ₹0.50/1k', p: 0.50, id: 1798, min: 100},
-            {n: 'Insta Real Likes [Non Drop] - ₹10/1k', p: 10, id: 3841, min: 100},
-            {n: 'Insta Indian Likes [High Speed] - ₹15/1k', p: 15, id: 1792, min: 50},
-            {n: 'Insta Followers [Mix Accounts] - ₹30/1k', p: 30, id: 3076, min: 100},
-            {n: 'Insta Followers [365 Days Refill] - ₹45/1k', p: 45, id: 3165, min: 100},
-            {n: 'Insta Followers [100% Old Accounts] - ₹60/1k', p: 60, id: 3095, min: 10}
-        ],
-        'TikTok': [
-            {n: 'TikTok Views [High Speed] - ₹5/1k', p: 5, id: 3344, min: 100},
-            {n: 'TikTok Followers [Real] - ₹80/1k', p: 80, id: 4501, min: 10}
-        ],
-        'YouTube': [
-            {n: 'YouTube Views [Non Drop] - ₹150/1k', p: 150, id: 888, min: 100}
-        ]
-    };
+        let db = JSON.parse(localStorage.getItem('smm_db')) || {};
+        let logs = JSON.parse(localStorage.getItem('smm_logs')) || [];
+        let config = JSON.parse(localStorage.getItem('smm_config')) || { margin: 1.5 }; // 1.5 means 50%
+        let sessionUser = null;
 
-    function filterSrv(cat, el) {
-        document.querySelectorAll('.icon-item').forEach(i => i.classList.remove('active-icon'));
-        el.classList.add('active-icon');
-        let sel = document.getElementById('srvSelect');
-        sel.innerHTML = services[cat].map(s => `<option value="${s.p}" data-id="${s.id}" data-min="${s.min}">${s.n}</option>`).join('');
-        calcPrice();
-    }
-
-    function calcPrice() {
-        let r = document.getElementById('srvSelect').value;
-        let q = document.getElementById('orderQty').value || 0;
-        document.getElementById('p-disp').innerText = "₹" + ((r / 1000) * q).toFixed(2);
-    }
-
-    async function placeOrder() {
-        let cost = Number(document.getElementById('p-disp').innerText.replace('₹',''));
-        let link = document.getElementById('orderLink').value;
-        let qty = Number(document.getElementById('orderQty').value);
-        let srvEl = document.getElementById('srvSelect');
-        let srvID = srvEl.options[srvEl.selectedIndex].getAttribute('data-id');
-        let minQty = Number(srvEl.options[srvEl.selectedIndex].getAttribute('data-min'));
-
-        if(!link || !qty) return alert("Details bhariye!");
-        if(qty < minQty) return alert("Minimum Order " + minQty + " hona chahiye!");
-        if(db[sessionUser].bal < cost) return alert("Paisa kam hai, Recharge karein!");
-
-        // Paisa Kato
-        db[sessionUser].bal -= cost;
-        db[sessionUser].spent = (db[sessionUser].spent || 0) + cost;
-
-        alert("MRSMM ko order bhej rahe hain...");
-        
-        let params = new URLSearchParams();
-        params.append('key', API_KEY);
-        params.append('action', 'add');
-        params.append('service', srvID);
-        params.append('link', link);
-        params.append('quantity', qty);
-
-        try {
-            let res = await fetch(API_URL, { method: 'POST', body: params });
-            let data = await res.json();
-            
-            if(data.order) {
-                logs.unshift({ id: data.order, user: sessionUser, type: 'ORDER', desc: srvEl.options[srvEl.selectedIndex].text, amt: cost, status: 'Processing', date: new Date().toLocaleString() });
-                save(); updateUI(); alert("Order Lag Gaya! ID: " + data.order);
-            } else {
-                db[sessionUser].bal += cost; 
-                alert("MRSMM Error: " + data.error);
-            }
-        } catch(e) {
-            db[sessionUser].bal += cost;
-            alert("Connection Error! Apna internet check karein.");
+        function save() { 
+            localStorage.setItem('smm_db', JSON.stringify(db)); 
+            localStorage.setItem('smm_logs', JSON.stringify(logs));
+            localStorage.setItem('smm_config', JSON.stringify(config));
         }
-    }
 
-    // --- Baki Functions (Login, Signup, Admin) Wahi Rahenge ---
-    function doLogin() {
-        let u = document.getElementById('l-user').value.trim(), p = document.getElementById('l-pass').value.trim();
-        if(u === "admin" && p === "suhel7388") { toggleScreen('admin-panel'); renderAdmin(); return; }
-        if(db[u] && db[u].pass === p) { sessionUser = u; updateUI(); toggleScreen('user-panel'); filterSrv('TikTok', document.querySelector('.icon-item')); }
-        else alert("Galat Password!");
-    }
+        // --- ADMIN FUNCTIONS ---
+        function updateMargin() {
+            let val = document.getElementById('margin-slider').value;
+            document.getElementById('margin-val').innerText = val;
+            config.margin = 1 + (val / 100);
+            save();
+        }
 
-    function doSignup() {
-        let u = document.getElementById('s-user').value.trim(), p = document.getElementById('s-pass').value;
-        if(!u || !p) return alert("Details dalo!");
-        db[u] = { pass: p, bal: 0, spent: 0 }; save(); alert("Account ban gaya!"); toggleScreen('login-screen');
-    }
+        function addBalanceAdmin() {
+            let target = document.getElementById('adm-target-user').value.trim();
+            let amt = Number(document.getElementById('adm-amount').value);
+            if(db[target] && amt > 0) {
+                db[target].bal += amt;
+                save();
+                renderAdmin();
+                alert(`Added ₹${amt} to ${target}'s account!`);
+            } else { alert("User not found!"); }
+        }
 
-    function submitFund() {
-        let a = document.getElementById('f-amt').value, u = document.getElementById('f-utr').value;
-        if(!a || u.length < 10) return alert("Sahi UTR dalo!");
-        logs.unshift({ id: "F-"+Date.now(), user: sessionUser, type: 'FUND', amt: Number(a), utr: u, status: 'Pending', date: new Date().toLocaleString() });
-        save(); alert("Request Admin ko bhej di gayi hai!");
-    }
+        function renderAdmin() {
+            let keys = Object.keys(db);
+            let total = 0;
+            keys.forEach(k => total += db[k].bal);
+            document.getElementById('adm-users').innerText = keys.length;
+            document.getElementById('adm-bal').innerText = "₹" + total.toFixed(2);
+            document.getElementById('margin-slider').value = (config.margin - 1) * 100;
+            document.getElementById('margin-val').innerText = (config.margin - 1) * 100;
+        }
 
-    function renderAdmin() {
-        let cont = document.getElementById('admin-requests'); cont.innerHTML = "";
-        logs.filter(l => l.type === 'FUND' && l.status === 'Pending').forEach(req => {
-            cont.innerHTML += `<div class="pending-card"><b>${req.user} - ₹${req.amt}</b><br><small>UTR: ${req.utr}</small><br><button onclick="approve('${req.id}')" style="background:green;color:white;border:none;padding:5px;border-radius:5px;margin-top:5px;">Approve ✅</button></div>`;
-        });
-    }
+        // --- USER FUNCTIONS ---
+        function calcPrice() {
+            let baseRate = document.getElementById('srvSelect').value;
+            let qty = document.getElementById('orderQty').value || 0;
+            let userRate = baseRate * config.margin; // Applying Profit Margin
+            document.getElementById('p-disp').innerText = "₹" + ((userRate / 1000) * qty).toFixed(2);
+        }
 
-    function approve(id) {
-        let req = logs.find(l => l.id === id);
-        if(req) { db[req.user].bal += req.amt; req.status = "Success"; save(); renderAdmin(); alert("Funds Added!"); }
-    }
+        async function placeOrder() {
+            let cost = Number(document.getElementById('p-disp').innerText.replace('₹',''));
+            let link = document.getElementById('orderLink').value;
+            let qty = Number(document.getElementById('orderQty').value);
+            let srvEl = document.getElementById('srvSelect');
+            let srvID = srvEl.options[srvEl.selectedIndex].getAttribute('data-id');
 
-    function save() { localStorage.setItem('smm_db', JSON.stringify(db)); localStorage.setItem('smm_logs', JSON.stringify(logs)); }
-    function toggleScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-    function updateUI() { document.getElementById('u-bal').innerText = db[sessionUser].bal.toFixed(2); document.getElementById('displayUser').innerText = "Hi, " + sessionUser; }
-    function updateQR() {
-        let a = document.getElementById('f-amt').value;
-        let box = document.getElementById('qrBox'), img = document.getElementById('qrImg');
-        if(a >= 1) { box.style.display='block'; img.src=`https://api.qrserver.com/v1/create-qr-code/?data=upi://pay?pa=7388720012@fam%26am=${a}`; }
-        else { box.style.display='none'; }
-    }
-    function showTab(id, el) { document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(id).style.display='block'; el.classList.add('active'); }
-    function renderHistory() {
-        let cont = document.getElementById('history-list'); cont.innerHTML = logs.filter(l => l.user === sessionUser).map(l => `<div class="stat-card" style="font-size:12px; flex-direction:column; align-items:flex-start;"><b>${l.type}: ${l.desc || 'Fund Request'}</b><span>Amt: ₹${l.amt} | Status: <span class="status-badge ${l.status.toLowerCase()}">${l.status}</span></span></div>`).join('');
-    }
-            </script>
-    
+            if(!link || qty < 100) return alert("Fill link & Min 100 qty!");
+            if(db[sessionUser].bal < cost) return alert("Low Balance!");
+
+            db[sessionUser].bal -= cost;
+            db[sessionUser].spent += cost;
+            db[sessionUser].orders = (db[sessionUser].orders || 0) + 1;
+
+            try {
+                let params = new URLSearchParams({ key: API_KEY, action: 'add', service: srvID, link: link, quantity: qty });
+                let res = await fetch(API_URL, { method: 'POST', body: params });
+                let data = await res.json();
+                if(data.order) {
+                    logs.unshift({ id: data.order, user: sessionUser, desc: srvEl.options[srvEl.selectedIndex].text, amt: cost, date: new Date().toLocaleString() });
+                    save(); updateUI(); alert("Order Success! ID: " + data.order);
+                } else {
+                    db[sessionUser].bal += cost; alert("Error: " + data.error);
+                }
+            } catch(e) { alert("API Error!"); }
+        }
+
+        // --- CORE FUNCTIONS ---
+        function doLogin() {
+            let u = document.getElementById('l-user').value.trim(), p = document.getElementById('l-pass').value.trim();
+            if(u === "admin" && p === "suhel7388") { renderAdmin(); toggleScreen('admin-panel'); return; }
+            if(db[u] && db[u].pass === p) { sessionUser = u; updateUI(); toggleScreen('user-panel'); }
+            else { alert("Wrong login!"); }
+        }
+
+        function doSignup() {
+            let u = document.getElementById('s-user').value.trim(), p = document.getElementById('s-pass').value.trim();
+            if(u && p) { db[u] = {pass:p, bal:0, spent:0, orders:0}; save(); alert("Account Created!"); toggleScreen('login-screen'); }
+        }
+
+        function updateUI() {
+            document.getElementById('u-bal').innerText = db[sessionUser].bal.toFixed(2);
+            document.getElementById('u-spent').innerText = (db[sessionUser].spent || 0).toFixed(2);
+            document.getElementById('u-orders').innerText = db[sessionUser].orders || 0;
+            document.getElementById('displayUser').innerText = "Account: " + sessionUser;
+        }
+
+        function toggleScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        function showTab(id, el) { document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(id).style.display='block'; el.classList.add('active'); }
+        function renderHistory() {
+            let uLogs = logs.filter(l => l.user === sessionUser);
+            document.getElementById('history-list').innerHTML = uLogs.map(l => `<div class="history-item"><b>${l.desc}</b><br><small>₹${l.amt} | ${l.date} | ID: ${l.id}</small></div>`).join('') || "No orders.";
+        }
+    </script>
 </body>
 </html>
+
