@@ -114,129 +114,137 @@
         <div id="admin-requests" style="padding:10px;"></div>
         <button class="btn-blue" style="margin:20px; background:#64748b; width:90%;" onclick="location.reload()">Exit Admin</button>
     </div>
+<script>
+    // --- API CONFIGURATION ---
+    const API_URL = "https://mrsmm.org/api/v2";
+    const API_KEY = "adb83355244cecd3cdceff120d499460";
 
-    <script>
-        // --- API CONFIG ---
-        const API_URL = "https://mrsmm.org/api/v2";
-        const API_KEY = "adb83355244cecd3cdceff120d499460";
+    let db = JSON.parse(localStorage.getItem('smm_db')) || {};
+    let logs = JSON.parse(localStorage.getItem('smm_logs')) || [];
+    let sessionUser = null;
 
-        let db = JSON.parse(localStorage.getItem('smm_db')) || {};
-        let logs = JSON.parse(localStorage.getItem('smm_logs')) || [];
-        let sessionUser = null;
+    // --- YAHAN ADD KIYA HAI SERVICES KO ---
+    const services = {
+        'Instagram': [
+            {n: 'Insta Views [Ultra Fast] - ₹0.50/1k', p: 0.50, id: 1798, min: 100},
+            {n: 'Insta Real Likes [Non Drop] - ₹10/1k', p: 10, id: 3841, min: 100},
+            {n: 'Insta Indian Likes [High Speed] - ₹15/1k', p: 15, id: 1792, min: 50},
+            {n: 'Insta Followers [Mix Accounts] - ₹30/1k', p: 30, id: 3076, min: 100},
+            {n: 'Insta Followers [365 Days Refill] - ₹45/1k', p: 45, id: 3165, min: 100},
+            {n: 'Insta Followers [100% Old Accounts] - ₹60/1k', p: 60, id: 3095, min: 10}
+        ],
+        'TikTok': [
+            {n: 'TikTok Views [High Speed] - ₹5/1k', p: 5, id: 3344, min: 100},
+            {n: 'TikTok Followers [Real] - ₹80/1k', p: 80, id: 4501, min: 10}
+        ],
+        'YouTube': [
+            {n: 'YouTube Views [Non Drop] - ₹150/1k', p: 150, id: 888, min: 100}
+        ]
+    };
 
-        // --- SERVICES (Yahan data-id MRSMM wali dalo) ---
-        const services = {
-            'TikTok': [
-                {n: 'TikTok Views [ID: 3344] - ₹2/1k', p: 2, id: 3344},
-                {n: 'TikTok Followers [ID: 4501] - ₹65/1k', p: 65, id: 4501}
-            ],
-            'Instagram': [
-                {n: 'Insta Views [ID: 1200] - ₹1/1k', p: 1, id: 1798},
-                {n: 'Insta Followers [ID: 2500] - ₹50/1k', p: 50, id: 2500}
-            ],
-            'YouTube': [
-                {n: 'YouTube Views [ID: 888] - ₹120/1k', p: 120, id: 888}
-            ]
-        };
+    function filterSrv(cat, el) {
+        document.querySelectorAll('.icon-item').forEach(i => i.classList.remove('active-icon'));
+        el.classList.add('active-icon');
+        let sel = document.getElementById('srvSelect');
+        sel.innerHTML = services[cat].map(s => `<option value="${s.p}" data-id="${s.id}" data-min="${s.min}">${s.n}</option>`).join('');
+        calcPrice();
+    }
 
-        function filterSrv(cat, el) {
-            document.querySelectorAll('.icon-item').forEach(i => i.classList.remove('active-icon'));
-            el.classList.add('active-icon');
-            let sel = document.getElementById('srvSelect');
-            sel.innerHTML = services[cat].map(s => `<option value="${s.p}" data-id="${s.id}">${s.n}</option>`).join('');
-            calcPrice();
+    function calcPrice() {
+        let r = document.getElementById('srvSelect').value;
+        let q = document.getElementById('orderQty').value || 0;
+        document.getElementById('p-disp').innerText = "₹" + ((r / 1000) * q).toFixed(2);
+    }
+
+    async function placeOrder() {
+        let cost = Number(document.getElementById('p-disp').innerText.replace('₹',''));
+        let link = document.getElementById('orderLink').value;
+        let qty = Number(document.getElementById('orderQty').value);
+        let srvEl = document.getElementById('srvSelect');
+        let srvID = srvEl.options[srvEl.selectedIndex].getAttribute('data-id');
+        let minQty = Number(srvEl.options[srvEl.selectedIndex].getAttribute('data-min'));
+
+        if(!link || !qty) return alert("Details bhariye!");
+        if(qty < minQty) return alert("Minimum Order " + minQty + " hona chahiye!");
+        if(db[sessionUser].bal < cost) return alert("Paisa kam hai, Recharge karein!");
+
+        // Paisa Kato
+        db[sessionUser].bal -= cost;
+        db[sessionUser].spent = (db[sessionUser].spent || 0) + cost;
+
+        alert("MRSMM ko order bhej rahe hain...");
+        
+        let params = new URLSearchParams();
+        params.append('key', API_KEY);
+        params.append('action', 'add');
+        params.append('service', srvID);
+        params.append('link', link);
+        params.append('quantity', qty);
+
+        try {
+            let res = await fetch(API_URL, { method: 'POST', body: params });
+            let data = await res.json();
+            
+            if(data.order) {
+                logs.unshift({ id: data.order, user: sessionUser, type: 'ORDER', desc: srvEl.options[srvEl.selectedIndex].text, amt: cost, status: 'Processing', date: new Date().toLocaleString() });
+                save(); updateUI(); alert("Order Lag Gaya! ID: " + data.order);
+            } else {
+                db[sessionUser].bal += cost; 
+                alert("MRSMM Error: " + data.error);
+            }
+        } catch(e) {
+            db[sessionUser].bal += cost;
+            alert("Connection Error! Apna internet check karein.");
         }
+    }
 
-        function calcPrice() {
-            let r = document.getElementById('srvSelect').value;
-            let q = document.getElementById('orderQty').value || 0;
-            document.getElementById('p-disp').innerText = "₹" + ((r / 1000) * q).toFixed(2);
-        }
+    // --- Baki Functions (Login, Signup, Admin) Wahi Rahenge ---
+    function doLogin() {
+        let u = document.getElementById('l-user').value.trim(), p = document.getElementById('l-pass').value.trim();
+        if(u === "admin" && p === "suhel7388") { toggleScreen('admin-panel'); renderAdmin(); return; }
+        if(db[u] && db[u].pass === p) { sessionUser = u; updateUI(); toggleScreen('user-panel'); filterSrv('TikTok', document.querySelector('.icon-item')); }
+        else alert("Galat Password!");
+    }
 
-        function updateQR() {
-            let a = document.getElementById('f-amt').value;
-            let box = document.getElementById('qrBox'), img = document.getElementById('qrImg');
-            if(a >= 1) { box.style.display='block'; img.src=`https://api.qrserver.com/v1/create-qr-code/?data=upi://pay?pa=7388720012@fam%26am=${a}`; }
-            else { box.style.display='none'; }
-        }
+    function doSignup() {
+        let u = document.getElementById('s-user').value.trim(), p = document.getElementById('s-pass').value;
+        if(!u || !p) return alert("Details dalo!");
+        db[u] = { pass: p, bal: 0, spent: 0 }; save(); alert("Account ban gaya!"); toggleScreen('login-screen');
+    }
 
-        async function placeOrder() {
-            let cost = Number(document.getElementById('p-disp').innerText.replace('₹',''));
-            let link = document.getElementById('orderLink').value;
-            let qty = document.getElementById('orderQty').value;
-            let srvEl = document.getElementById('srvSelect');
-            let srvID = srvEl.options[srvEl.selectedIndex].getAttribute('data-id');
+    function submitFund() {
+        let a = document.getElementById('f-amt').value, u = document.getElementById('f-utr').value;
+        if(!a || u.length < 10) return alert("Sahi UTR dalo!");
+        logs.unshift({ id: "F-"+Date.now(), user: sessionUser, type: 'FUND', amt: Number(a), utr: u, status: 'Pending', date: new Date().toLocaleString() });
+        save(); alert("Request Admin ko bhej di gayi hai!");
+    }
 
-            if(!link || !qty) return alert("Details bhariye!");
-            if(db[sessionUser].bal < cost) return alert("Low Balance!");
+    function renderAdmin() {
+        let cont = document.getElementById('admin-requests'); cont.innerHTML = "";
+        logs.filter(l => l.type === 'FUND' && l.status === 'Pending').forEach(req => {
+            cont.innerHTML += `<div class="pending-card"><b>${req.user} - ₹${req.amt}</b><br><small>UTR: ${req.utr}</small><br><button onclick="approve('${req.id}')" style="background:green;color:white;border:none;padding:5px;border-radius:5px;margin-top:5px;">Approve ✅</button></div>`;
+        });
+    }
 
-            db[sessionUser].bal -= cost;
-            db[sessionUser].spent = (db[sessionUser].spent || 0) + cost;
+    function approve(id) {
+        let req = logs.find(l => l.id === id);
+        if(req) { db[req.user].bal += req.amt; req.status = "Success"; save(); renderAdmin(); alert("Funds Added!"); }
+    }
 
-            // Auto forward to MRSMM
-            let params = new URLSearchParams();
-            params.append('key', API_KEY); params.append('action', 'add'); params.append('service', srvID); params.append('link', link); params.append('quantity', qty);
-
-            alert("Sending order to MRSMM...");
-            try {
-                let res = await fetch(API_URL, { method: 'POST', body: params });
-                let data = await res.json();
-                if(data.order) {
-                    logs.unshift({ user: sessionUser, type: 'ORDER', desc: srvEl.options[srvEl.selectedIndex].text, amt: cost, status: 'Processing', date: new Date().toLocaleString() });
-                    save(); updateUI(); alert("Success! Order ID: " + data.order);
-                } else {
-                    db[sessionUser].bal += cost; alert("API Error: " + data.error);
-                }
-            } catch(e) { db[sessionUser].bal += cost; alert("Connection Error!"); }
-        }
-
-        function submitFund() {
-            let a = document.getElementById('f-amt').value, u = document.getElementById('f-utr').value;
-            if(!a || u.length < 10) return alert("Sahi UTR dalo!");
-            logs.unshift({ id: "F-"+Date.now(), user: sessionUser, type: 'FUND', amt: Number(a), utr: u, status: 'Pending', date: new Date().toLocaleString() });
-            save(); alert("Request sent! Admin approve karega.");
-            showTab('history-tab', document.querySelectorAll('.nav-item')[2]); renderHistory();
-        }
-
-        function doLogin() {
-            let u = document.getElementById('l-user').value.trim(), p = document.getElementById('l-pass').value.trim();
-            if(u === "admin" && p === "suhel7388") { toggleScreen('admin-panel'); renderAdmin(); return; }
-            if(db[u] && db[u].pass === p) { sessionUser = u; updateUI(); toggleScreen('user-panel'); filterSrv('TikTok', document.querySelector('.icon-item')); }
-            else alert("Invalid!");
-        }
-
-        function doSignup() {
-            let u = document.getElementById('s-user').value.trim(), p = document.getElementById('s-pass').value;
-            if(!u || !p) return alert("Bhadiye!");
-            db[u] = { pass: p, bal: 0, spent: 0 }; save(); toggleScreen('login-screen');
-        }
-
-        function renderAdmin() {
-            let cont = document.getElementById('admin-requests'); cont.innerHTML = "";
-            logs.filter(l => l.type === 'FUND' && l.status === 'Pending').forEach(req => {
-                cont.innerHTML += `<div class="pending-card">
-                    <b>${req.user} - ₹${req.amt}</b><br><small>UTR: ${req.utr}</small><br>
-                    <button onclick="approve('${req.id}')" style="background:green;color:white;border:none;padding:5px;border-radius:5px;">Approve</button>
-                </div>`;
-            });
-        }
-
-        function approve(id) {
-            let req = logs.find(l => l.id === id);
-            if(req) { db[req.user].bal += req.amt; req.status = "Success"; save(); renderAdmin(); alert("Done!"); }
-        }
-
-        function save() { localStorage.setItem('smm_db', JSON.stringify(db)); localStorage.setItem('smm_logs', JSON.stringify(logs)); }
-        function toggleScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
-        function showTab(id, el) { document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(id).style.display='block'; el.classList.add('active'); }
-        function updateUI() { document.getElementById('u-bal').innerText = db[sessionUser].bal.toFixed(2); document.getElementById('displayUser').innerText = "Hi, " + sessionUser; }
-        function renderHistory() {
-            let cont = document.getElementById('history-list'); cont.innerHTML = logs.filter(l => l.user === sessionUser).map(l => `
-                <div class="stat-card" style="font-size:12px; flex-direction:column; align-items:flex-start;">
-                    <b>${l.type}: ${l.desc || 'Fund Request'}</b>
-                    <span>Amt: ₹${l.amt} | Status: <span class="status-badge ${l.status.toLowerCase()}">${l.status}</span></span>
-                </div>`).join('');
-        }
-    </script>
+    function save() { localStorage.setItem('smm_db', JSON.stringify(db)); localStorage.setItem('smm_logs', JSON.stringify(logs)); }
+    function toggleScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+    function updateUI() { document.getElementById('u-bal').innerText = db[sessionUser].bal.toFixed(2); document.getElementById('displayUser').innerText = "Hi, " + sessionUser; }
+    function updateQR() {
+        let a = document.getElementById('f-amt').value;
+        let box = document.getElementById('qrBox'), img = document.getElementById('qrImg');
+        if(a >= 1) { box.style.display='block'; img.src=`https://api.qrserver.com/v1/create-qr-code/?data=upi://pay?pa=7388720012@fam%26am=${a}`; }
+        else { box.style.display='none'; }
+    }
+    function showTab(id, el) { document.querySelectorAll('.tab-content').forEach(t => t.style.display='none'); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById(id).style.display='block'; el.classList.add('active'); }
+    function renderHistory() {
+        let cont = document.getElementById('history-list'); cont.innerHTML = logs.filter(l => l.user === sessionUser).map(l => `<div class="stat-card" style="font-size:12px; flex-direction:column; align-items:flex-start;"><b>${l.type}: ${l.desc || 'Fund Request'}</b><span>Amt: ₹${l.amt} | Status: <span class="status-badge ${l.status.toLowerCase()}">${l.status}</span></span></div>`).join('');
+    }
+            </script>
+    
 </body>
 </html>
