@@ -3,119 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growfansite | Premium SMM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Growfam - Best SMM Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --blue: #0081ff; --dark-blue: #0056b3; --gradient: linear-gradient(135deg, #8e2de2, #4a00e0); --admin-card: linear-gradient(to right, #802d3a, #1a1a2e); }
-        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background-color: #f4f7fa; margin: 0; padding-bottom: 70px; }
+        :root { --blue: #3abaf4; --bg: #f4f6f9; --dark: #343a40; }
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { margin: 0; background: var(--bg); }
 
-        /* --- ADMIN CARDS (Image Style) --- */
-        .admin-grid { display: grid; grid-template-columns: 1fr; gap: 15px; padding: 20px; }
-        .adm-card { background: var(--admin-card); border-radius: 20px; padding: 25px; color: white; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .adm-card h4 { margin: 0; font-size: 14px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px; }
-        .adm-card .val { font-size: 32px; font-weight: 800; margin-top: 10px; display: block; text-align: right; }
-        .adm-card .rocket { position: absolute; left: 20px; bottom: 20px; font-size: 30px; opacity: 0.9; transform: rotate(-45deg); }
-        
-        /* Table Style for User Details */
-        .user-list-container { background: white; margin: 15px; border-radius: 15px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .user-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        .user-table th { text-align: left; padding: 10px; border-bottom: 2px solid #f1f5f9; color: #64748b; }
-        .user-table td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; }
-        
-        /* Home Stats (Image Style) */
-        .home-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; text-align: center; }
-        .stat-circle { width: 80px; height: 80px; border: 4px solid var(--blue); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 24px; color: var(--blue); }
-        .stat-label { margin-top: 10px; font-weight: 700; color: #1e293b; font-size: 14px; }
+        /* --- LOGIN SCREEN (Photo 1) --- */
+        .login-bg { background: var(--blue); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-top: 50px; }
+        .hero-text { color: white; text-align: center; padding: 20px; }
+        .hero-text h1 { font-size: 28px; margin-bottom: 10px; }
+        .login-card { background: white; width: 90%; max-width: 400px; border-radius: 25px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-top: 20px; }
+        .login-card h2 { text-align: center; font-size: 18px; color: #555; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #444; }
+        .login-input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e0e0e0; background: #f0f9ff; outline: none; }
+        .btn-login { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--blue); color: white; font-weight: 700; font-size: 16px; cursor: pointer; margin-top: 10px; }
 
-        /* Global Utils */
-        .screen { display: none; max-width: 500px; margin: 0 auto; min-height: 100vh; background: #fff; }
+        /* --- ADMIN DASHBOARD (Photo 2) --- */
+        .admin-screen { display: none; padding-bottom: 80px; }
+        .admin-header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
+        .stat-grid { display: grid; grid-template-columns: 1fr; gap: 15px; padding: 15px; }
+        .admin-card { background: white; border: 1px solid #e3e6f0; border-radius: 5px; overflow: hidden; }
+        .card-body { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .card-body i { font-size: 40px; color: #222; opacity: 0.8; }
+        .card-footer { background: #f8f9fc; padding: 10px 15px; border-top: 1px solid #e3e6f0; color: var(--blue); font-size: 13px; display: flex; justify-content: space-between; cursor: pointer; }
+
+        /* Manager Tools */
+        .tool-box { background: white; margin: 15px; padding: 20px; border-radius: 10px; border: 1px solid #eee; }
+        .btn-action { padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; color: white; }
+
         .active { display: block; }
-        .btn-action { background: var(--blue); color: white; border: none; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 700; }
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: #fff; display: flex; justify-content: space-around; padding: 12px; border-top: 1px solid #eee; }
     </style>
 </head>
 <body>
 
-    <div id="admin-panel" class="screen">
-        <div style="padding: 20px; background: #fff; border-bottom: 1px solid #eee;">
-            <h3 style="margin:0; color:var(--blue);">Admin Dashboard</h3>
+    <div id="login-screen" class="login-bg active">
+        <div class="hero-text">
+            <h1>GROWFAM</h1>
+            <p>The Cheapest & Best SMM Panel For RESELLERS</p>
+            <a href="#" style="color:white; text-decoration:none; font-weight:700;">Contact Support Team 👉 Click</a>
         </div>
-
-        <div class="admin-grid">
-            <div class="adm-card">
-                <h4>Users</h4>
-                <i class="fas fa-rocket rocket"></i>
-                <span class="val" id="adm-count-users">1</span>
+        <div class="login-card">
+            <h2>Welcome To Provider Panel</h2>
+            <div class="form-group">
+                <label><i class="fa fa-user"></i> Username</label>
+                <input type="text" id="l-user" class="login-input">
             </div>
-            <div class="adm-card">
-                <h4>Orders</h4>
-                <i class="fas fa-rocket rocket"></i>
-                <span class="val" id="adm-count-orders">0</span>
+            <div class="form-group">
+                <label><i class="fa fa-lock"></i> Password</label>
+                <input type="password" id="l-pass" class="login-input">
             </div>
-            <div class="adm-card">
-                <h4>Funds Pending</h4>
-                <i class="fas fa-rocket rocket" style="color: #ff9f43;"></i>
-                <span class="val" id="adm-count-funds">0</span>
-            </div>
-        </div>
-
-        <div class="user-list-container">
-            <h4 style="margin: 0 0 10px 0;">User Database</h4>
-            <div style="overflow-x: auto;">
-                <table class="user-table">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Password</th>
-                            <th>Number</th>
-                            <th>Wallet</th>
-                        </tr>
-                    </thead>
-                    <tbody id="user-rows">
-                        </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div style="padding: 20px;">
-            <button class="btn-action" style="width:100%; background:#64748b;" onclick="location.reload()">Exit Admin</button>
+            <button class="btn-login" onclick="handleLogin()">Login</button>
         </div>
     </div>
 
-    <div id="home-screen" class="screen active">
-        <div style="padding: 40px 20px; text-align: center;">
-            <h1 style="color: var(--blue); font-weight: 900;">Growfansite</h1>
-            <p style="color: #64748b;">Duniya ka Sabse Sasta SMM Panel</p>
+    <div id="admin-panel" class="admin-screen">
+        <div class="admin-header">
+            <h3 style="color:var(--blue); margin:0;">GROWFAM ADMIN</h3>
+            <i class="fa fa-bars" onclick="location.reload()"></i>
         </div>
 
-        <div class="home-stats">
-            <div>
-                <div class="stat-circle"><i class="fas fa-shopping-basket"></i></div>
-                <div style="font-size: 20px; font-weight: 800; margin-top: 10px;">432,798</div>
-                <div class="stat-label">Order Completed</div>
+        <div class="stat-grid">
+            <div class="admin-card">
+                <div class="card-body">
+                    <i class="fa fa-users"></i>
+                    <div style="text-align:right;"><div id="total-users" style="font-size:24px; font-weight:700;">0</div><small>Registered Users</small></div>
+                </div>
+                <div class="card-footer" onclick="showSection('user-manage')">See in Detail <i class="fa fa-arrow-circle-right"></i></div>
             </div>
-            <div>
-                <div class="stat-circle"><i class="fas fa-users"></i></div>
-                <div style="font-size: 20px; font-weight: 800; margin-top: 10px;">15,178</div>
-                <div class="stat-label">Active Users</div>
+
+            <div class="admin-card">
+                <div class="card-body">
+                    <i class="fa fa-shopping-cart"></i>
+                    <div style="text-align:right;"><div id="total-orders" style="font-size:24px; font-weight:700;">0</div><small>Total Orders</small></div>
+                </div>
+                <div class="card-footer" onclick="showSection('order-list')">See in Detail <i class="fa fa-arrow-circle-right"></i></div>
             </div>
         </div>
 
-        <div style="padding: 20px;">
-            <button class="btn-action" style="width:100%; margin-bottom: 10px;" onclick="toggleScreen('login-screen')">Sign In</button>
-            <button class="btn-action" style="width:100%; background: #fff; color: var(--blue); border: 2px solid var(--blue);" onclick="toggleScreen('signup-screen')">Register</button>
+        <div id="user-manage" class="tool-box">
+            <h4>Manage User Funds</h4>
+            <input type="text" id="target-user" class="login-input" placeholder="Enter Username" style="margin-bottom:10px;">
+            <input type="number" id="fund-amount" class="login-input" placeholder="Amount (₹)">
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button onclick="manageFund('add')" class="btn-action" style="background:#28a745; flex:1;">Add Fund</button>
+                <button onclick="manageFund('del')" class="btn-action" style="background:#dc3545; flex:1;">Deduct Fund</button>
+            </div>
         </div>
-    </div>
 
-    <div id="signup-screen" class="screen">
-        <div style="padding: 40px 20px;">
-            <h2>Create Account</h2>
-            <input type="text" id="s-user" placeholder="Username" style="width:100%; padding:15px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
-            <input type="password" id="s-pass" placeholder="Password" style="width:100%; padding:15px; margin-bottom:10px; border-radius:10px; border:1px solid #ddd;">
-            <input type="number" id="s-phone" placeholder="Mobile Number" style="width:100%; padding:15px; margin-bottom:20px; border-radius:10px; border:1px solid #ddd;">
-            <button class="btn-action" style="width:100%;" onclick="doSignup()">Sign Up Now</button>
+        <div id="order-list" class="tool-box">
+            <h4>Global Order History</h4>
+            <div id="full-history" style="font-size:12px; color:#666;">No orders in system.</div>
         </div>
     </div>
 
@@ -123,51 +104,54 @@
         let db = JSON.parse(localStorage.getItem('smm_db')) || {};
         let logs = JSON.parse(localStorage.getItem('smm_logs')) || [];
 
-        function save() { localStorage.setItem('smm_db', JSON.stringify(db)); }
+        function handleLogin() {
+            let u = document.getElementById('l-user').value.trim();
+            let p = document.getElementById('l-pass').value.trim();
 
-        function doSignup() {
-            let u = document.getElementById('s-user').value.trim();
-            let p = document.getElementById('s-pass').value.trim();
-            let ph = document.getElementById('s-phone').value.trim();
-            
-            if(u && p && ph) {
-                db[u] = { pass: p, phone: ph, bal: 0, spent: 0 };
-                save();
-                alert("Account created successfully!");
-                location.reload();
-            } else { alert("Please fill all details!"); }
+            if(u === "admin" && p === "suhel7388") {
+                document.getElementById('login-screen').classList.remove('active');
+                document.getElementById('admin-panel').classList.add('active');
+                refreshAdminStats();
+            } else {
+                alert("Only Admin can access this dashboard!");
+            }
         }
 
-        // Admin Trigger (Shortcut for you)
-        function toggleScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(id === 'admin-panel') renderAdmin();
-        }
-
-        function renderAdmin() {
+        function refreshAdminStats() {
             let users = Object.keys(db);
-            document.getElementById('adm-count-users').innerText = users.length;
-            
-            let table = document.getElementById('user-rows');
-            table.innerHTML = users.map(u => `
-                <tr>
-                    <td><b>${u}</b></td>
-                    <td>${db[u].pass}</td>
-                    <td>${db[u].phone}</td>
-                    <td style="color:green; font-weight:700;">₹${db[u].bal}</td>
-                </tr>
+            document.getElementById('total-users').innerText = users.length;
+            document.getElementById('total-orders').innerText = logs.length;
+
+            let historyHtml = logs.map(l => `
+                <div style="border-bottom:1px solid #eee; padding:10px 0;">
+                    <b>${l.user}</b>: ${l.desc} <br>
+                    <small>Amt: ₹${l.amt} | Date: ${l.date}</small>
+                </div>
             `).join('');
+            document.getElementById('full-history').innerHTML = historyHtml || "No orders yet.";
         }
 
-        // Password check for Admin
-        function doLogin() {
-            let u = document.getElementById('l-user').value;
-            let p = document.getElementById('l-pass').value;
-            if(u === 'admin' && p === 'suhel7388') { toggleScreen('admin-panel'); }
-            // User login logic...
+        function manageFund(type) {
+            let user = document.getElementById('target-user').value.trim();
+            let amt = parseFloat(document.getElementById('fund-amount').value);
+
+            if(!db[user]) return alert("User not found!");
+            if(isNaN(amt)) return alert("Enter valid amount!");
+
+            if(type === 'add') {
+                db[user].bal += amt;
+                alert(`Added ₹${amt} to ${user}`);
+            } else {
+                db[user].bal = Math.max(0, db[user].bal - amt);
+                alert(`Deducted ₹${amt} from ${user}`);
+            }
+            localStorage.setItem('smm_db', JSON.stringify(db));
+            refreshAdminStats();
+        }
+
+        function showSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
         }
     </script>
 </body>
 </html>
-
