@@ -3,197 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growfam - Professional SMM Panel</title>
+    <title>Growfam - Professional Provider Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --blue: #0081ff; --bg: #f8fafc; --white: #ffffff; --gray: #94a3b8; }
-        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg); margin: 0; padding-bottom: 80px; }
-        .screen { display: none; max-width: 480px; margin: 0 auto; min-height: 100vh; background: white; position: relative; box-shadow: 0 0 30px rgba(0,0,0,0.05); }
+        :root { --blue: #0081ff; --light-blue: #eef6ff; --bg: #f8fafc; --white: #ffffff; --gray: #94a3b8; --text: #1e293b; }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: 0.3s; }
+        body { background: var(--bg); margin: 0; color: var(--text); padding-bottom: 70px; }
+        
+        .screen { display: none; max-width: 480px; margin: 0 auto; min-height: 100vh; background: white; position: relative; box-shadow: 0 0 40px rgba(0,0,0,0.1); }
         .active { display: block; }
 
-        /* --- LOGIN STYLE --- */
-        .login-bg { background: var(--blue); padding-top: 50px; text-align: center; }
-        .login-card { background: white; border-radius: 30px 30px 0 0; padding: 40px 20px; margin-top: 30px; min-height: 70vh; }
-        .login-input { width: 100%; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0; margin-bottom: 15px; outline: none; background: #f0f9ff; }
+        /* --- LOGIN PAGE (As per screenshot) --- */
+        .login-header { background: var(--blue); padding: 40px 20px; text-align: center; color: white; border-radius: 0 0 40px 40px; }
+        .form-box { padding: 30px 20px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #64748b; }
+        .input-field { width: 100%; padding: 15px; border-radius: 12px; border: 1.5px solid #e2e8f0; outline: none; font-size: 14px; background: #fcfdfe; }
+        .input-field:focus { border-color: var(--blue); background: white; }
 
-        /* --- DASHBOARD STYLE --- */
-        .card-row { padding: 15px; display: grid; gap: 10px; }
-        .stat-card { background: white; border: 1px solid #f1f5f9; padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .stat-icon { width: 45px; height: 45px; background: #eef6ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--blue); font-size: 20px; }
-        .cat-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; scrollbar-width: none; }
-        .cat-icon { min-width: 50px; height: 50px; border: 1.5px solid #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--gray); cursor: pointer; }
-        .cat-icon.active-cat { border-color: var(--blue); color: var(--blue); background: #eef6ff; }
+        /* --- DASHBOARD CARDS (MRSMM Style) --- */
+        .header-bar { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; }
+        .stat-grid { padding: 15px; display: grid; gap: 12px; }
+        .card { background: white; padding: 20px; border-radius: 20px; border: 1px solid #f1f5f9; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
+        .card-icon { width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        .val { font-size: 22px; font-weight: 800; margin: 0; }
+        .lab { font-size: 12px; color: var(--gray); font-weight: 600; }
 
-        /* --- TABLE STYLE --- */
-        table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
-        th { background: #f8fafc; padding: 10px; text-align: left; color: var(--gray); }
-        td { padding: 12px 10px; border-bottom: 1px solid #f1f5f9; }
-        .badge { padding: 4px 8px; border-radius: 6px; color: white; font-weight: 700; font-size: 10px; }
-        .btn-blue { width: 100%; padding: 16px; border-radius: 14px; border: none; background: var(--blue); color: white; font-weight: 700; cursor: pointer; box-shadow: 0 8px 15px rgba(0,129,255,0.2); }
-        .nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; z-index: 100; }
-        .nav-item { text-align: center; color: var(--gray); font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; }
-        .nav-item.active { color: var(--blue); }
+        /* --- SERVICE ICONS --- */
+        .cat-row { display: flex; gap: 12px; overflow-x: auto; padding: 10px 20px; scrollbar-width: none; }
+        .cat-btn { min-width: 55px; height: 55px; border-radius: 15px; border: 1.5px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--gray); cursor: pointer; background: white; }
+        .cat-btn.active { border-color: var(--blue); color: var(--blue); background: var(--light-blue); }
+
+        /* --- ADMIN & TABLES --- */
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 11px; }
+        .admin-table th { background: #f1f5f9; padding: 12px; text-align: left; }
+        .admin-table td { padding: 12px; border-bottom: 1px solid #eee; }
+        .btn-action { padding: 6px 12px; border-radius: 8px; border: none; color: white; cursor: pointer; font-weight: 600; }
+
+        /* --- UI COMPONENTS --- */
+        .btn-main { width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--blue); color: white; font-weight: 800; font-size: 16px; cursor: pointer; box-shadow: 0 10px 20px rgba(0,129,255,0.2); }
+        .nav-bottom { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: white; display: flex; border-top: 1px solid #eee; padding: 10px 0; }
+        .nav-tab { flex: 1; text-align: center; color: var(--gray); font-size: 10px; font-weight: 700; cursor: pointer; }
+        .nav-tab.active { color: var(--blue); }
+        .nav-tab i { font-size: 20px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" class="screen active login-bg">
-        <h1 style="color:white; margin:0;">GROWFAM</h1>
-        <p style="color:rgba(255,255,255,0.8);">Cheapest & Best SMM Panel</p>
-        <div class="login-card">
-            <h2 style="color:#444;">Welcome Back</h2>
-            <input type="text" id="l-user" class="login-input" placeholder="Username">
-            <input type="password" id="l-pass" class="login-input" placeholder="Password">
-            <button class="btn-blue" onclick="doLogin()">Login Now</button>
-            <img src="https://i.ibb.co/84xc5km1/rocket-girl-smm.png" style="width:80%; margin-top:30px; opacity:0.8;">
+    <div id="login-screen" class="screen active">
+        <div class="login-header">
+            <h1 style="margin:0; font-size: 32px; letter-spacing: -1px;">GROWFAM</h1>
+            <p style="opacity:0.9; font-size: 14px;">The Cheapest & Best SMM Panel</p>
+        </div>
+        <div class="form-box" id="login-form">
+            <h2 style="margin-top:0;">Login</h2>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="log-user" class="input-field" placeholder="Enter username">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="log-pass" class="input-field" placeholder="Enter password">
+            </div>
+            <button class="btn-main" onclick="handleLogin()">Login</button>
+            <p style="text-align:center; font-size: 13px;">Naya account banayein? <a href="#" onclick="showReg(true)" style="color:var(--blue); font-weight:700;">Sign Up</a></p>
+        </div>
+
+        <div class="form-box" id="register-form" style="display:none;">
+            <h2>Create Account</h2>
+            <input type="text" id="reg-user" class="input-field" placeholder="Username" style="margin-bottom:15px;">
+            <input type="email" id="reg-mail" class="input-field" placeholder="Email Address" style="margin-bottom:15px;">
+            <input type="number" id="reg-phone" class="input-field" placeholder="Phone Number" style="margin-bottom:15px;">
+            <input type="password" id="reg-pass" class="input-field" placeholder="Password" style="margin-bottom:15px;">
+            <button class="btn-main" onclick="handleRegister()">Register Now</button>
+            <p style="text-align:center;"><a href="#" onclick="showReg(false)">Wapas Login karein</a></p>
         </div>
     </div>
 
-    <div id="user-panel" class="screen">
-        <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9;">
-            <b style="color:var(--blue); font-size:20px;">MRSMM.ORG</b>
-            <i class="fa-solid fa-bars" onclick="openAdmin()"></i>
+    <div id="dashboard-screen" class="screen">
+        <div class="header-bar">
+            <b style="color:var(--blue); font-size:22px;">MRSMM.ORG</b>
+            <div onclick="checkAdminAccess()" style="background:var(--light-blue); padding:8px 12px; border-radius:10px; color:var(--blue); font-weight:800; cursor:pointer;">ADMIN</div>
         </div>
 
-        <div class="card-row">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
-                <div><p style="margin:0; font-weight:800;">₹<span id="u-bal">0.00</span></p><small style="color:var(--gray);">Balance</small></div>
+        <div class="stat-grid">
+            <div class="card">
+                <div class="card-icon" style="background:#eef6ff; color:var(--blue);"><i class="fa-solid fa-clipboard-list"></i></div>
+                <div><p class="val" id="d-orders">10973190</p><p class="lab">Panel orders</p></div>
             </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fa-solid fa-coins"></i></div>
-                <div><p style="margin:0; font-weight:800;">₹<span id="u-spent">0.00</span></p><small style="color:var(--gray);">Spent</small></div>
+            <div class="card">
+                <div class="card-icon" style="background:#f0fdf4; color:#22c55e;"><i class="fa-solid fa-wallet"></i></div>
+                <div><p class="val">₹<span id="d-bal">0.00</span></p><p class="lab">Account balance</p></div>
+            </div>
+            <div class="card">
+                <div class="card-icon" style="background:#fff7ed; color:#f97316;"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                <div><p class="val">₹<span id="d-spent">0.00</span></p><p class="lab">Spent balance</p></div>
             </div>
         </div>
 
-        <div class="cat-scroll">
-            <div class="cat-icon active-cat" onclick="selCat('tiktok', this)"><i class="fa-brands fa-tiktok"></i></div>
-            <div class="cat-icon" onclick="selCat('insta', this)"><i class="fa-brands fa-instagram"></i></div>
-            <div class="cat-icon" onclick="selCat('youtube', this)"><i class="fa-brands fa-youtube"></i></div>
-            <div class="cat-icon" onclick="selCat('telegram', this)"><i class="fa-brands fa-telegram"></i></div>
+        <div class="cat-row">
+            <div class="cat-btn active" onclick="setCat('tiktok', this)"><i class="fa-brands fa-tiktok"></i></div>
+            <div class="cat-btn" onclick="setCat('insta', this)"><i class="fa-brands fa-instagram"></i></div>
+            <div class="cat-btn" onclick="setCat('youtube', this)"><i class="fa-brands fa-youtube"></i></div>
+            <div class="cat-btn" onclick="setCat('facebook', this)"><i class="fa-brands fa-facebook"></i></div>
         </div>
 
-        <div style="padding: 20px;">
-            <select id="srvSelect" class="login-input" onchange="calcPrice()"></select>
-            <input type="text" id="orderLink" class="login-input" placeholder="Paste Link Here">
-            <input type="number" id="orderQty" class="login-input" placeholder="Quantity" oninput="calcPrice()">
+        <div style="padding:20px;">
+            <label class="lab" style="display:block; margin-bottom:5px;">SERVICE</label>
+            <select id="service-select" class="input-field" onchange="updatePrice()" style="margin-bottom:15px;"></select>
             
-            <div style="text-align:center; margin-bottom:15px;">
-                <small>Total Charge:</small>
-                <div style="font-size:28px; font-weight:800; color:var(--blue);" id="p-disp">₹0.00</div>
+            <input type="text" id="order-link" class="input-field" placeholder="Link" style="margin-bottom:15px;">
+            <input type="number" id="order-qty" class="input-field" placeholder="Quantity" oninput="updatePrice()" style="margin-bottom:15px;">
+            
+            <div style="background:var(--light-blue); padding:15px; border-radius:15px; text-align:center; margin-bottom:20px;">
+                <small style="color:var(--blue); font-weight:700;">TOTAL CHARGE</small>
+                <div style="font-size:26px; font-weight:900; color:var(--blue);" id="total-disp">₹0.00</div>
             </div>
-            <button class="btn-blue" onclick="placeOrder()">Place Order</button>
+            <button class="btn-main" onclick="placeOrder()">Place Order</button>
         </div>
 
-        <div class="nav">
-            <div class="nav-item active" onclick="toggleScreen('user-panel')"><i class="fa-solid fa-cart-shopping"></i>New Order</div>
-            <div class="nav-item" onclick="toggleScreen('history-screen')"><i class="fa-solid fa-history"></i>History</div>
-            <div class="nav-item" onclick="location.reload()"><i class="fa-solid fa-sign-out"></i>Logout</div>
+        <div class="nav-bottom">
+            <div class="nav-tab active" onclick="switchTab('dashboard-screen', this)"><i class="fa-solid fa-cart-plus"></i>New Order</div>
+            <div class="nav-tab" onclick="switchTab('history-screen', this)"><i class="fa-solid fa-clock-rotate-left"></i>History</div>
+            <div class="nav-tab" onclick="location.reload()"><i class="fa-solid fa-right-from-bracket"></i>Logout</div>
         </div>
     </div>
 
     <div id="history-screen" class="screen">
-        <div style="padding:20px; background:var(--blue); color:white;"><h3>Order History</h3></div>
-        <table>
-            <thead><tr><th>ID</th><th>Status</th><th>Action</th></tr></thead>
-            <tbody id="history-body"></tbody>
-        </table>
-        <button class="btn-blue" style="margin:20px; width:90%; background:#64748b;" onclick="toggleScreen('user-panel')">Back</button>
+        <div class="header-bar"><b>Order History</b></div>
+        <div style="padding:15px; overflow-x:auto;">
+            <table class="admin-table">
+                <thead><tr><th>ID</th><th>Price</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody id="history-list"></tbody>
+            </table>
+        </div>
+        <button class="btn-main" style="width:90%; margin:20px; background:#64748b;" onclick="switchTab('dashboard-screen')">Back to New Order</button>
     </div>
 
-    <div id="admin-panel" class="screen">
-        <div style="padding:20px; background:#333; color:white;"><h3>Admin Manager</h3></div>
-        <div style="padding:20px;">
-            <input type="text" id="target-user" class="login-input" placeholder="User Name">
-            <input type="number" id="fund-amt" class="login-input" placeholder="Amount (₹)">
-            <button class="btn-blue" onclick="manageFunds('add')" style="background:#28a745;">Add Fund</button>
-            <button class="btn-blue" onclick="manageFunds('del')" style="background:#dc3545; margin-top:10px;">Deduct Fund</button>
+    <div id="admin-panel" class="screen" style="background:#f1f5f9;">
+        <div style="padding:20px; background:#1e293b; color:white;">
+            <h3 style="margin:0;">Master Admin Panel</h3>
+            <p style="font-size:11px; opacity:0.7;">User Management & Fund Control</p>
         </div>
-        <button class="btn-blue" style="margin:20px; width:90%; background:#64748b;" onclick="toggleScreen('user-panel')">Close</button>
+
+        <div style="padding:15px;">
+            <div style="background:white; padding:15px; border-radius:15px; margin-bottom:15px;">
+                <h4>Add/Deduct Funds</h4>
+                <input type="text" id="adm-target" class="input-field" placeholder="User Name" style="margin-bottom:10px;">
+                <input type="number" id="adm-amt" class="input-field" placeholder="Amount (₹)" style="margin-bottom:10px;">
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-action" style="background:#22c55e; flex:1;" onclick="admFund('add')">Add</button>
+                    <button class="btn-action" style="background:#ef4444; flex:1;" onclick="admFund('sub')">Deduct</button>
+                </div>
+            </div>
+
+            <div style="background:white; padding:15px; border-radius:15px; overflow-x:auto;">
+                <h4>Registered Users List</h4>
+                <table class="admin-table">
+                    <thead><tr><th>User/Pass</th><th>Email/Phone</th><th>Bal</th></tr></thead>
+                    <tbody id="admin-user-list"></tbody>
+                </table>
+            </div>
+        </div>
+        <button class="btn-main" style="width:90%; margin:20px; background:#64748b;" onclick="switchTab('dashboard-screen')">Exit Admin</button>
     </div>
 
     <script>
-        // CONFIG
-        const API_URL = "https://starofsmm.com/api/v2";
-        const API_KEY = "YOUR_API_KEY_HERE"; // Starofsmm se copy karein
-        const PROFIT = 1.5; // 50% Profit
-        
-        let db = JSON.parse(localStorage.getItem('smm_db')) || { 'suhel': {pass:'123', bal:1000, spent:0, orders:[]} };
-        let sessionUser = null;
+        // --- DATA & CONFIG ---
+        let db = JSON.parse(localStorage.getItem('growfam_db')) || {
+            'suhel': {pass:'7388', email:'admin@growfam.site', phone:'12345', bal:5000, spent:0, orders:[]}
+        };
+        let currentUser = null;
+        const PROFIT_MARGIN = 1.4; // 40% Profit
 
-        function doLogin() {
-            let u = document.getElementById('l-user').value.toLowerCase();
-            let p = document.getElementById('l-pass').value;
-            if(db[u] && db[u].pass === p) { sessionUser = u; updateUI(); toggleScreen('user-panel'); }
-            else alert("Ghalat details!");
+        const services = {
+            'tiktok': [{id: 3344, name: "TikTok Followers [Real]", rate: 0.15}, {id: 3345, name: "TikTok Likes", rate: 0.05}],
+            'insta': [{id: 5726, name: "Instagram Followers [Bot]", rate: 0.20}, {id: 5727, name: "Instagram Likes", rate: 0.08}],
+            'youtube': [{id: 9901, name: "YouTube Subs", rate: 1.50}],
+            'facebook': [{id: 8801, name: "FB Page Likes", rate: 0.80}]
+        };
+
+        // --- AUTH LOGIC ---
+        function handleLogin() {
+            let u = document.getElementById('log-user').value.toLowerCase();
+            let p = document.getElementById('log-pass').value;
+            if(db[u] && db[u].pass === p) { currentUser = u; setupDashboard(); switchTab('dashboard-screen'); }
+            else alert("Username ya Password ghalat hai!");
         }
 
-        function updateUI() {
-            document.getElementById('u-bal').innerText = db[sessionUser].bal.toFixed(2);
-            document.getElementById('u-spent').innerText = (db[sessionUser].spent || 0).toFixed(2);
-            loadServices();
+        function handleRegister() {
+            let u = document.getElementById('reg-user').value.toLowerCase();
+            let e = document.getElementById('reg-mail').value;
+            let ph = document.getElementById('reg-phone').value;
+            let p = document.getElementById('reg-pass').value;
+            
+            if(!u || !p || !e) return alert("Saari details bhariye!");
+            if(db[u]) return alert("Username pehle se hai!");
+            
+            db[u] = {pass: p, email: e, phone: ph, bal: 0, spent: 0, orders: []};
+            save(); alert("Registration Success! Login karein.");
+            showReg(false);
         }
 
-        async function loadServices() {
-            // Demo data (Asli API call yahan aayegi fetch se)
-            const demo = [
-                {id: 101, name: "Instagram Followers", rate: 0.50},
-                {id: 202, name: "TikTok Likes", rate: 0.10}
-            ];
-            document.getElementById('srvSelect').innerHTML = demo.map(s => 
-                `<option value="${s.rate * 85 * PROFIT}">${s.name} - ₹${(s.rate * 85 * PROFIT).toFixed(2)}</option>`
-            ).join('');
+        // --- DASHBOARD LOGIC ---
+        function setupDashboard() {
+            document.getElementById('d-bal').innerText = db[currentUser].bal.toFixed(2);
+            document.getElementById('d-spent').innerText = db[currentUser].spent.toFixed(2);
+            setCat('tiktok');
         }
 
-        function calcPrice() {
-            let rate = document.getElementById('srvSelect').value;
-            let qty = document.getElementById('orderQty').value || 0;
-            document.getElementById('p-disp').innerText = "₹" + ((rate/1000)*qty).toFixed(2);
+        function setCat(cat, el) {
+            if(el) {
+                document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+                el.classList.add('active');
+            }
+            let options = services[cat].map(s => `<option value="${s.rate * 85 * PROFIT_MARGIN}">${s.name} (ID: ${s.id})</option>`).join('');
+            document.getElementById('service-select').innerHTML = options;
+            updatePrice();
+        }
+
+        function updatePrice() {
+            let rate = document.getElementById('service-select').value;
+            let qty = document.getElementById('order-qty').value || 0;
+            let total = (rate/1000) * qty;
+            document.getElementById('total-disp').innerText = "₹" + total.toFixed(2);
         }
 
         function placeOrder() {
-            let price = parseFloat(document.getElementById('p-disp').innerText.replace('₹',''));
-            if(db[sessionUser].bal < price) return alert("Balance kam hai!");
+            let total = parseFloat(document.getElementById('total-disp').innerText.replace('₹',''));
+            if(db[currentUser].bal < total) return alert("Paisa kam hai, admin se sampark karein!");
+            if(total <= 0) return alert("Quantity sahi daalein!");
+
+            let orderId = Math.floor(Math.random() * 8999999) + 1000000;
+            db[currentUser].bal -= total;
+            db[currentUser].spent += total;
+            db[currentUser].orders.push({id: orderId, price: total, status: 'Pending'});
             
-            let id = Math.floor(Math.random() * 99999);
-            db[sessionUser].bal -= price;
-            db[sessionUser].spent += price;
-            db[sessionUser].orders.push({id: id, status: 'Pending', date: new Date().toLocaleDateString()});
-            
-            localStorage.setItem('smm_db', JSON.stringify(db));
-            alert("Order Placed! ID: " + id);
-            updateUI();
+            save(); setupDashboard();
+            alert("Order Lag Gaya! ID: " + orderId);
         }
 
-        function toggleScreen(id) {
+        // --- ADMIN LOGIC ---
+        function checkAdminAccess() {
+            let p = prompt("Admin Password daalein:");
+            if(p === "suhel7388") { // Special Admin Key
+                switchTab('admin-panel');
+                loadAdminUsers();
+            } else { alert("Aap admin nahi hain!"); }
+        }
+
+        function loadAdminUsers() {
+            let html = "";
+            for(let u in db) {
+                html += `<tr>
+                    <td><b>${u}</b><br><small>${db[u].pass}</small></td>
+                    <td>${db[u].email}<br>${db[u].phone}</td>
+                    <td>₹${db[u].bal}</td>
+                </tr>`;
+            }
+            document.getElementById('admin-user-list').innerHTML = html;
+        }
+
+        function admFund(type) {
+            let u = document.getElementById('adm-target').value.toLowerCase();
+            let a = parseFloat(document.getElementById('adm-amt').value);
+            if(!db[u]) return alert("User nahi mila!");
+            db[u].bal = (type === 'add') ? db[u].bal + a : Math.max(0, db[u].bal - a);
+            save(); loadAdminUsers(); alert("Balance Updated!");
+        }
+
+        // --- UTILS ---
+        function showReg(show) {
+            document.getElementById('login-form').style.display = show ? 'none' : 'block';
+            document.getElementById('register-form').style.display = show ? 'block' : 'none';
+        }
+
+        function switchTab(id, el) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
+            if(el) {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                el.classList.add('active');
+            }
             if(id === 'history-screen') renderHistory();
         }
 
         function renderHistory() {
-            let html = db[sessionUser].orders.map(o => `
-                <tr><td>${o.id}</td><td><b style="color:orange;">${o.status}</b></td>
-                <td><button onclick="alert('Cancelling...')" style="font-size:10px; background:red; color:white; border:none; padding:5px; border-radius:4px;">Cancel</button></td></tr>
+            let html = db[currentUser].orders.map(o => `
+                <tr><td>${o.id}</td><td>₹${o.price.toFixed(2)}</td>
+                <td><span style="color:orange; font-weight:bold;">${o.status}</span></td>
+                <td><button onclick="alert('Cancelling...')" style="background:red; color:white; border:none; border-radius:4px; font-size:10px;">Cancel</button></td></tr>
             `).join('');
-            document.getElementById('history-body').innerHTML = html || "<tr><td colspan='3'>No orders</td></tr>";
+            document.getElementById('history-list').innerHTML = html || "<tr><td colspan='4'>No orders</td></tr>";
         }
 
-        function openAdmin() {
-            let p = prompt("Admin Password:");
-            if(p === "suhel7388") toggleScreen('admin-panel');
-        }
-
-        function manageFunds(type) {
-            let u = document.getElementById('target-user').value.toLowerCase();
-            let a = parseFloat(document.getElementById('fund-amt').value);
-            if(!db[u]) return alert("User nahi mila!");
-            db[u].bal = (type === 'add') ? db[u].bal + a : Math.max(0, db[u].bal - a);
-            localStorage.setItem('smm_db', JSON.stringify(db));
-            alert("Done!");
-        }
+        function save() { localStorage.setItem('growfam_db', JSON.stringify(db)); }
     </script>
 </body>
 </html>
