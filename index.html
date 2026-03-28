@@ -3,155 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growfam - Best SMM Panel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Growfam - Professional SMM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --blue: #3abaf4; --bg: #f4f6f9; --dark: #343a40; }
-        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { margin: 0; background: var(--bg); }
-
-        /* --- LOGIN SCREEN (Photo 1) --- */
-        .login-bg { background: var(--blue); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding-top: 50px; }
-        .hero-text { color: white; text-align: center; padding: 20px; }
-        .hero-text h1 { font-size: 28px; margin-bottom: 10px; }
-        .login-card { background: white; width: 90%; max-width: 400px; border-radius: 25px; padding: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); margin-top: 20px; }
-        .login-card h2 { text-align: center; font-size: 18px; color: #555; margin-bottom: 30px; }
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #444; }
-        .login-input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e0e0e0; background: #f0f9ff; outline: none; }
-        .btn-login { width: 100%; padding: 15px; border-radius: 12px; border: none; background: var(--blue); color: white; font-weight: 700; font-size: 16px; cursor: pointer; margin-top: 10px; }
-
-        /* --- ADMIN DASHBOARD (Photo 2) --- */
-        .admin-screen { display: none; padding-bottom: 80px; }
-        .admin-header { background: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
-        .stat-grid { display: grid; grid-template-columns: 1fr; gap: 15px; padding: 15px; }
-        .admin-card { background: white; border: 1px solid #e3e6f0; border-radius: 5px; overflow: hidden; }
-        .card-body { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .card-body i { font-size: 40px; color: #222; opacity: 0.8; }
-        .card-footer { background: #f8f9fc; padding: 10px 15px; border-top: 1px solid #e3e6f0; color: var(--blue); font-size: 13px; display: flex; justify-content: space-between; cursor: pointer; }
-
-        /* Manager Tools */
-        .tool-box { background: white; margin: 15px; padding: 20px; border-radius: 10px; border: 1px solid #eee; }
-        .btn-action { padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; color: white; }
-
+        :root { --blue: #0081ff; --bg: #f8fafc; --white: #ffffff; --gray: #94a3b8; }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: var(--bg); margin: 0; padding-bottom: 80px; }
+        .screen { display: none; max-width: 480px; margin: 0 auto; min-height: 100vh; background: white; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
         .active { display: block; }
+
+        /* Dashboard Cards */
+        .card-row { padding: 15px; display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .stat-card { background: white; border: 1px solid #f1f5f9; padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .stat-icon { width: 45px; height: 45px; background: #eef6ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: var(--blue); font-size: 20px; }
+        .stat-val { font-size: 18px; font-weight: 800; margin: 0; }
+        .stat-label { font-size: 11px; color: var(--gray); font-weight: 600; }
+
+        /* Service Icons Row */
+        .cat-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 20px; scrollbar-width: none; }
+        .cat-icon { min-width: 50px; height: 50px; border: 1.5px solid #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--gray); cursor: pointer; }
+        .cat-icon.active-cat { border-color: var(--blue); color: var(--blue); background: #eef6ff; }
+
+        /* Inputs & Buttons */
+        .order-box { margin: 10px 15px; padding: 20px; border: 1px solid #f1f5f9; border-radius: 20px; }
+        .input-box { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 15px; outline: none; font-size: 14px; }
+        .btn-blue { width: 100%; padding: 16px; border-radius: 14px; border: none; background: var(--blue); color: white; font-weight: 700; cursor: pointer; }
+
+        /* Bottom Nav */
+        .nav { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: #fff; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid #eee; }
+        .nav-item { text-align: center; color: var(--gray); font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; }
+        .nav-item.active { color: var(--blue); }
+        .nav-item i { font-size: 22px; margin-bottom: 4px; display: block; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" class="login-bg active">
-        <div class="hero-text">
-            <h1>GROWFAM</h1>
-            <p>The Cheapest & Best SMM Panel For RESELLERS</p>
-            <a href="#" style="color:white; text-decoration:none; font-weight:700;">Contact Support Team 👉 Click</a>
+    <div id="user-panel" class="screen active">
+        <div style="padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9;">
+            <b style="color:var(--blue); font-size:20px;">GROWFAM</b>
+            <i class="fa-solid fa-bars" onclick="showAdmin()"></i>
         </div>
-        <div class="login-card">
-            <h2>Welcome To Provider Panel</h2>
-            <div class="form-group">
-                <label><i class="fa fa-user"></i> Username</label>
-                <input type="text" id="l-user" class="login-input">
+
+        <div class="card-row">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-list-check"></i></div>
+                <div><p class="stat-val">10973190</p><p class="stat-label">Panel orders</p></div>
             </div>
-            <div class="form-group">
-                <label><i class="fa fa-lock"></i> Password</label>
-                <input type="password" id="l-pass" class="login-input">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-wallet"></i></div>
+                <div><p class="stat-val">₹<span id="u-bal">0.00</span></p><p class="stat-label">Account balance</p></div>
             </div>
-            <button class="btn-login" onclick="handleLogin()">Login</button>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-coins"></i></div>
+                <div><p class="stat-val">₹<span id="u-spent">0.00</span></p><p class="stat-label">Spent balance</p></div>
+            </div>
+        </div>
+
+        <div class="cat-scroll">
+            <div class="cat-icon active-cat" onclick="selCat('tiktok', this)"><i class="fa-brands fa-tiktok"></i></div>
+            <div class="cat-icon" onclick="selCat('insta', this)"><i class="fa-brands fa-instagram"></i></div>
+            <div class="cat-icon" onclick="selCat('youtube', this)"><i class="fa-brands fa-youtube"></i></div>
+            <div class="cat-icon" onclick="selCat('facebook', this)"><i class="fa-brands fa-facebook"></i></div>
+            <div class="cat-icon" onclick="selCat('telegram', this)"><i class="fa-brands fa-telegram"></i></div>
+        </div>
+
+        <div class="order-box">
+            <label style="font-size:11px; font-weight:700; color:var(--gray);">Category</label>
+            <select id="catSelect" class="input-box" onchange="updateServices()">
+                <option value="tiktok">TikTok Services</option>
+                <option value="insta">Instagram Services</option>
+                <option value="youtube">YouTube Services</option>
+            </select>
+            
+            <label style="font-size:11px; font-weight:700; color:var(--gray);">Service</label>
+            <select id="srvSelect" class="input-box" onchange="calcPrice()"></select>
+            
+            <input type="text" id="orderLink" class="input-box" placeholder="Link">
+            <input type="number" id="orderQty" class="input-box" placeholder="Quantity" oninput="calcPrice()">
+
+            <div style="text-align:center; padding:10px;">
+                <small style="color:var(--gray);">Charge:</small>
+                <div style="font-size:24px; font-weight:800; color:var(--blue);" id="p-disp">₹0.00</div>
+            </div>
+            <button class="btn-blue" onclick="placeOrder()">Place Order</button>
+        </div>
+
+        <div class="nav">
+            <div class="nav-item active"><i class="fa-solid fa-cart-shopping"></i>New Order</div>
+            <div class="nav-item" onclick="alert('WhatsApp support se fund add karein!')"><i class="fa-solid fa-plus-circle"></i>Add Fund</div>
+            <div class="nav-item"><i class="fa-solid fa-history"></i>History</div>
         </div>
     </div>
 
-    <div id="admin-panel" class="admin-screen">
-        <div class="admin-header">
-            <h3 style="color:var(--blue); margin:0;">GROWFAM ADMIN</h3>
-            <i class="fa fa-bars" onclick="location.reload()"></i>
+    <div id="admin-panel" class="screen">
+        <div style="padding:20px; background:var(--blue); color:white;">
+            <h3>Admin Dashboard</h3>
+            <p>User Balance & Profit Control</p>
         </div>
-
-        <div class="stat-grid">
-            <div class="admin-card">
-                <div class="card-body">
-                    <i class="fa fa-users"></i>
-                    <div style="text-align:right;"><div id="total-users" style="font-size:24px; font-weight:700;">0</div><small>Registered Users</small></div>
-                </div>
-                <div class="card-footer" onclick="showSection('user-manage')">See in Detail <i class="fa fa-arrow-circle-right"></i></div>
-            </div>
-
-            <div class="admin-card">
-                <div class="card-body">
-                    <i class="fa fa-shopping-cart"></i>
-                    <div style="text-align:right;"><div id="total-orders" style="font-size:24px; font-weight:700;">0</div><small>Total Orders</small></div>
-                </div>
-                <div class="card-footer" onclick="showSection('order-list')">See in Detail <i class="fa fa-arrow-circle-right"></i></div>
-            </div>
-        </div>
-
-        <div id="user-manage" class="tool-box">
+        <div class="order-box">
             <h4>Manage User Funds</h4>
-            <input type="text" id="target-user" class="login-input" placeholder="Enter Username" style="margin-bottom:10px;">
-            <input type="number" id="fund-amount" class="login-input" placeholder="Amount (₹)">
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button onclick="manageFund('add')" class="btn-action" style="background:#28a745; flex:1;">Add Fund</button>
-                <button onclick="manageFund('del')" class="btn-action" style="background:#dc3545; flex:1;">Deduct Fund</button>
-            </div>
+            <input type="text" id="target-user" class="input-box" placeholder="Target Username">
+            <input type="number" id="fund-amount" class="input-box" placeholder="Amount (₹)">
+            <button class="btn-blue" style="background:#28a745;" onclick="manageFund('add')">Add Money ✅</button>
+            <button class="btn-blue" style="background:#dc3545; margin-top:10px;" onclick="manageFund('del')">Deduct Money ❌</button>
         </div>
-
-        <div id="order-list" class="tool-box">
-            <h4>Global Order History</h4>
-            <div id="full-history" style="font-size:12px; color:#666;">No orders in system.</div>
-        </div>
+        <button class="btn-blue" style="margin:20px; width:90%; background:#64748b;" onclick="toggleScreen('user-panel')">Back to Dashboard</button>
     </div>
 
     <script>
-        let db = JSON.parse(localStorage.getItem('smm_db')) || {};
-        let logs = JSON.parse(localStorage.getItem('smm_logs')) || [];
+        let db = JSON.parse(localStorage.getItem('smm_db')) || { 'Suhel': {pass:'123', bal:1000, spent:0} };
+        let sessionUser = 'Suhel';
+        const PROFIT = 1.5; // 50% Profit
 
-        function handleLogin() {
-            let u = document.getElementById('l-user').value.trim();
-            let p = document.getElementById('l-pass').value.trim();
+        const services = {
+            'tiktok': [{n:'TikTok Followers', r:2}, {n:'TikTok Views', r:0.1}],
+            'insta': [{n:'Instagram Likes', r:5}, {n:'Instagram Followers', r:25}],
+            'youtube': [{n:'YouTube Subscribers', r:150}]
+        };
 
-            if(u === "admin" && p === "suhel7388") {
-                document.getElementById('login-screen').classList.remove('active');
-                document.getElementById('admin-panel').classList.add('active');
-                refreshAdminStats();
-            } else {
-                alert("Only Admin can access this dashboard!");
-            }
+        function selCat(cat, el) {
+            document.querySelectorAll('.cat-icon').forEach(i => i.classList.remove('active-cat'));
+            el.classList.add('active-cat');
+            document.getElementById('catSelect').value = cat;
+            updateServices();
         }
 
-        function refreshAdminStats() {
-            let users = Object.keys(db);
-            document.getElementById('total-users').innerText = users.length;
-            document.getElementById('total-orders').innerText = logs.length;
+        function updateServices() {
+            let cat = document.getElementById('catSelect').value;
+            let srvSelect = document.getElementById('srvSelect');
+            srvSelect.innerHTML = services[cat].map(s => `<option value="${s.r * 85 * PROFIT}">${s.n} (₹${(s.r * 85 * PROFIT).toFixed(2)})</option>`).join('');
+            calcPrice();
+        }
 
-            let historyHtml = logs.map(l => `
-                <div style="border-bottom:1px solid #eee; padding:10px 0;">
-                    <b>${l.user}</b>: ${l.desc} <br>
-                    <small>Amt: ₹${l.amt} | Date: ${l.date}</small>
-                </div>
-            `).join('');
-            document.getElementById('full-history').innerHTML = historyHtml || "No orders yet.";
+        function calcPrice() {
+            let rate = document.getElementById('srvSelect').value;
+            let qty = document.getElementById('orderQty').value || 0;
+            document.getElementById('p-disp').innerText = "₹" + ((rate/1000)*qty).toFixed(2);
         }
 
         function manageFund(type) {
             let user = document.getElementById('target-user').value.trim();
             let amt = parseFloat(document.getElementById('fund-amount').value);
-
             if(!db[user]) return alert("User not found!");
-            if(isNaN(amt)) return alert("Enter valid amount!");
-
-            if(type === 'add') {
-                db[user].bal += amt;
-                alert(`Added ₹${amt} to ${user}`);
-            } else {
-                db[user].bal = Math.max(0, db[user].bal - amt);
-                alert(`Deducted ₹${amt} from ${user}`);
-            }
+            db[user].bal = (type === 'add') ? db[user].bal + amt : Math.max(0, db[user].bal - amt);
             localStorage.setItem('smm_db', JSON.stringify(db));
-            refreshAdminStats();
+            alert("Updated!");
+            updateUI();
         }
 
-        function showSection(id) {
-            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        function showAdmin() {
+            let pass = prompt("Enter Admin Password:");
+            if(pass === "suhel7388") toggleScreen('admin-panel');
         }
+
+        function toggleScreen(id) { document.querySelectorAll('.screen').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+        function updateUI() { document.getElementById('u-bal').innerText = db[sessionUser].bal.toFixed(2); document.getElementById('u-spent').innerText = db[sessionUser].spent.toFixed(2); }
+
+        updateServices();
+        updateUI();
     </script>
 </body>
 </html>
